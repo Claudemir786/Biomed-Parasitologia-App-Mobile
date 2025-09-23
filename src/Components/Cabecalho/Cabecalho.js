@@ -2,7 +2,7 @@ import {Text, View, StyleSheet, TouchableOpacity} from 'react-native'
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 
-export default function Cabecalho({nome="Claudemir dos Santos Junior", rgm="123456789"}){
+export default function Cabecalho({nome="Claudemir dos Santos Junior", rgm="123456789", local1, local2, local3}){
 
     return(
         <View style={styles.container}>
@@ -10,7 +10,11 @@ export default function Cabecalho({nome="Claudemir dos Santos Junior", rgm="1234
                 <TouchableOpacity style={styles.botao}><Text style={{color:'#fff', fontSize:15}}>Sair</Text></TouchableOpacity>
             </View>
             <View style={styles.Ctitle}>
-                <Text style={styles.title}>CLINICODE</Text>
+                <TouchableOpacity onPress={local1}>
+                    
+                    <Text style={styles.title}>CLINICODE</Text>
+
+                </TouchableOpacity> 
             </View>
             <View style={styles.infoUser}>
                 <TouchableOpacity style={styles.botaoUser}>

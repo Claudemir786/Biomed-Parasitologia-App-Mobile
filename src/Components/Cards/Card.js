@@ -1,6 +1,6 @@
 import {Text, View, StyleSheet, TouchableOpacity, Image, ScrollView} from 'react-native'
 
-export default function Card({imagem, titulo='default', subtitulo = 'default'}){
+export default function Card({imagem, titulo='default', subtitulo = 'default', local}){
 
     return(
         <View style={styles.container}>
@@ -16,7 +16,14 @@ export default function Card({imagem, titulo='default', subtitulo = 'default'}){
                 <Text style={styles.subtitle}>{subtitulo}</Text>
             </View>
             <View style={styles.CButton}>
-                <TouchableOpacity style={styles.button}><Text style={{fontSize:25, fontWeight:'bold', color:'#FFF'}}>CADASTRAR</Text></TouchableOpacity>
+                <TouchableOpacity 
+                style={styles.button} 
+                onPress={local} //variavel local é usada para navegar para outra pagina
+                >
+
+                    <Text style={{fontSize:25, fontWeight:'bold', color:'#FFF'}}>CADASTRAR</Text>
+                
+                </TouchableOpacity>
             </View>
         </View>
 

@@ -1,7 +1,7 @@
 import {Text, View, StyleSheet, TextInput} from 'react-native'
 
 //função das inputs que recebem o titulo e o placeholder caso queria edita-lo
-export default function CadastroInput({titulo = "default", placeholder = "digite aqui"}){
+export default function CadastroInput({titulo = "default", placeholder = "digite aqui", tipoTeclado}){
 
     return(
         <View style={styles.container}>
@@ -10,6 +10,7 @@ export default function CadastroInput({titulo = "default", placeholder = "digite
             <TextInput
                 style={styles.input}
                 placeholder={placeholder}
+                keyboardType={tipoTeclado} //usada para mudar o tipo de teclado caso queira 
             />
 
         </View>

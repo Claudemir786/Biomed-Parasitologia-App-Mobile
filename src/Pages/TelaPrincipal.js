@@ -6,7 +6,7 @@ import Card from '../Components/Cards/Card';
 
 
 
-export default function App() {
+export default function Inicio({navigation}) {
   return (
     <SafeAreaView style={styles.container}>
        <Cabecalho/>
@@ -20,12 +20,15 @@ export default function App() {
            titulo={"Consulta"}
            subtitulo={"Aqui você pode consultar seus pacientes"}
            imagem={require("../Assets/img/CARD_1_ALUNO.png")}
+           
           /> 
           <Card
            titulo={"Cadastro de exames"}
            subtitulo={"Aqui você vai cadastrar seus exames"}
            imagem={require("../Assets/img/Exame1.png")}
+           local={()=> navigation.navigate("CadastroExame")}
           /> 
+          
         </ScrollView>
         <View style={{marginTop:10}}>
             
