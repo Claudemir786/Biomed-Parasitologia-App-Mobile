@@ -5,7 +5,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import CadastroExame from '../Pages/CadastroExame';
 import Inicio from '../Pages/TelaPrincipal';
 import Laudo from '../Pages/Laudo';
-
+import TabNavigator from './tabs';
 
 
 export default function Abas() {
@@ -14,7 +14,7 @@ export default function Abas() {
   return (  
    
 
-        <NavigationContainer>
+       
 
             <Stack.Navigator //escolhe o tipo de navegação entre as telas
                 initialRouteName="Inicio"
@@ -22,13 +22,14 @@ export default function Abas() {
             > 
                 
                 {/*identifica todas as telas na rota e da seus respectivos nomes */}
+                <Stack.Screen name='TabNavigator' component={TabNavigator}/>
                 <Stack.Screen name='Inicio' component={Inicio}/>
                 <Stack.Screen name='CadastroExame' component={CadastroExame}/>
                 <Stack.Screen name='Laudo' component={Laudo}/>
 
             </Stack.Navigator>
 
-        </NavigationContainer>
+       
     
     
   );

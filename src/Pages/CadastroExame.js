@@ -6,6 +6,7 @@ import Botao from '../Components/BotaoPadrao'
 
 
 export default function CadastroExame({navigation}){
+    
 
     return(
         <SafeAreaView style={styles.container}>
