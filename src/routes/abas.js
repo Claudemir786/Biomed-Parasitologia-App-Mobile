@@ -17,7 +17,7 @@ export default function Abas() {
        
 
             <Stack.Navigator //escolhe o tipo de navegação entre as telas
-                initialRouteName="Inicio"
+                initialRouteName="TabNavigator"
                 screenOptions={{headerShown: false}} //remove a flecha de voltar            
             > 
                 
