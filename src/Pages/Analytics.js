@@ -1,11 +1,12 @@
-import {Text, View} from 'react-native'
+import {Text, View, StyleSheet} from 'react-native'
 
 
 export default function Analytics({navigation}){
 
     return(
-        <View>
+        <View style={{justifyContent:'center', alignItems:'center', flex:1 }}>
             <Text>Aqui é a aba de dataCience</Text>
         </View>
     )
 }
+

@@ -75,7 +75,7 @@ export default function Laudo({navigation}){
 
     return(
         <SafeAreaView style={styles.container}>
-            <Cabecalho local1={()=> navigation.navigate("Inicio")}/>
+            <Cabecalho local1={()=> navigation.navigate("TabNavigator")}/>
 
             <ScrollView style={styles.body}>
 

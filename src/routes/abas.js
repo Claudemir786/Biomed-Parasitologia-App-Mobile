@@ -11,10 +11,7 @@ import TabNavigator from './tabs';
 export default function Abas() {
 
     const Stack = createNativeStackNavigator(); //coloca todas as utilidades na const Stack
-  return (  
-   
-
-       
+  return (   
 
             <Stack.Navigator //escolhe o tipo de navegação entre as telas
                 initialRouteName="TabNavigator"

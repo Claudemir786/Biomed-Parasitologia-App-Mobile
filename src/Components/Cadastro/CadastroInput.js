@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
         padding:15,
         borderRadius:8,
         borderBottomWidth:1,
-        borderColor:'purple'
+        borderColor:'purple',
     },
     titulo:{
         fontSize:20,
