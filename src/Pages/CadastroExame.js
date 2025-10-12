@@ -8,8 +8,6 @@ import DateTimePicker from '@react-native-community/datetimepicker'
 import { useState } from 'react';
 
 
-
-
 export default function CadastroExame({navigation}){
     
     const [data, setData] = useState(new Date());

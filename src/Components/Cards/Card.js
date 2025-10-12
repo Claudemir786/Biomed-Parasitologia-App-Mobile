@@ -21,7 +21,7 @@ export default function Card({imagem, titulo='default', subtitulo = 'default', l
                 onPress={local} //variavel local é usada para navegar para outra pagina
                 >
 
-                    <Text style={{fontSize:25, fontWeight:'bold', color:'#FFF'}}>CADASTRAR</Text>
+                    <Text style={{fontFamily: 'Poppins-Bold', fontSize:18, color:'#FFF'}}>CADASTRAR</Text>
                 
                 </TouchableOpacity>
             </View>
@@ -61,16 +61,19 @@ const styles = StyleSheet.create({
 
     },
     title:{
-        fontSize:25,
-        fontWeight:'bold',
+        fontSize:20,
+        fontFamily: 'Poppins-Bold'
+        
 
     },
     subtitle:{
-        fontSize:20,
+        fontSize:13.8,
         marginLeft:60,
         marginRight:60,
         marginTop:5,
-        textAlign:'center',        
+        textAlign:'center',
+        fontFamily: 'Poppins-Regular'
+
     },    
     CButton:{
         marginTop:20,
