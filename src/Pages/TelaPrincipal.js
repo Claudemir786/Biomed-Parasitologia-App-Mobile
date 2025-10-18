@@ -1,39 +1,35 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View, SafeAreaView,ScrollView } from 'react-native';
+import { StyleSheet, View, ScrollView } from 'react-native';
 import Cabecalho from '../Components/Cabecalho/Cabecalho';
 import Card from '../Components/Cards/Card';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-
-
-export default function Inicio({navigation}) {
+export default function Inicio({ navigation }) {
   return (
-    <SafeAreaView style={styles.container}>
-       <Cabecalho/>
-        <ScrollView style={styles.body} showsVerticalScrollIndicator={false} >
+    <>
+      <SafeAreaView style={styles.container}>
+        <Cabecalho />
+        <ScrollView style={styles.body} showsVerticalScrollIndicator={false}>
           <Card
-            titulo={"Cadastro de Pacientes"}
-            subtitulo={"Aqui você vai cadastrar seus pacientes"}
+            titulo="Cadastro de Pacientes"
+            subtitulo="Aqui você vai cadastrar seus pacientes"
             imagem={require("../Assets/img/CARD_2_ALUNO.png")}
-          /> 
+          />
           <Card
-           titulo={"Consulta"}
-           subtitulo={"Aqui você pode consultar seus pacientes"}
-           imagem={require("../Assets/img/CARD_1_ALUNO.png")}
-           
-          /> 
+            titulo="Consulta"
+            subtitulo="Aqui você pode consultar seus pacientes"
+            imagem={require("../Assets/img/CARD_1_ALUNO.png")}
+          />
           <Card
-           titulo={"Cadastro de exames"}
-           subtitulo={"Aqui você vai cadastrar seus exames"}
-           imagem={require("../Assets/img/Exame1.png")}
-           local={()=> navigation.navigate("CadastroExame")}
-          /> 
-          
+            titulo="Cadastro de exames"
+            subtitulo="Aqui você vai cadastrar seus exames"
+            imagem={require("../Assets/img/Exame1.png")}
+            local={() => navigation.navigate("CadastroExame")}
+          />
         </ScrollView>
-        <View style={{marginTop:10}}>
-            
-        </View>
-    </SafeAreaView>
+      </SafeAreaView>
+    </>
   );
 }
 
@@ -44,11 +40,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  body:{
+  body: {
     flex: 1,
-    backgroundColor:'#E3E6E0',
-    width:'90%',
-
-    
-  }
+    backgroundColor: '#E3E6E0',
+    width: '90%',
+  },
 });

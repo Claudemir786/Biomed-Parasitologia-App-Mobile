@@ -6,6 +6,8 @@ import CadastroExame from '../Pages/CadastroExame';
 import Inicio from '../Pages/TelaPrincipal';
 import Laudo from '../Pages/Laudo';
 import TabNavigator from './tabs';
+import TelaApp from '../Pages/TelaApp';
+import TelaLogin from '../Pages/TelaLogin';
 
 
 export default function Abas() {
@@ -23,6 +25,9 @@ export default function Abas() {
                 <Stack.Screen name='Inicio' component={Inicio}/>
                 <Stack.Screen name='CadastroExame' component={CadastroExame}/>
                 <Stack.Screen name='Laudo' component={Laudo}/>
+                <Stack.Screen name='Login' component={TelaLogin}/>
+                <Stack.Screen name='App' component={TelaApp}/>
+                
 
             </Stack.Navigator>
 
