@@ -8,29 +8,38 @@ import Laudo from '../Pages/Laudo';
 import TabNavigator from './tabs';
 import TelaApp from '../Pages/TelaApp';
 import TelaLogin from '../Pages/TelaLogin';
-import CadastroPaciente from "../Pages/CadastroPaciente";
+import TelaCadastro from '../Pages/TelaCadastro';
+import Analytics from '../Pages/Analytics';
 
 
 export default function Abas() {
 
     const Stack = createNativeStackNavigator(); //coloca todas as utilidades na const Stack
-    return (
-        <NavigationContainer>
+  return (   
+
             <Stack.Navigator //escolhe o tipo de navegação entre as telas
                 initialRouteName="App"
-                screenOptions={{ headerShown: false }} //remove a flecha de voltar
-            >
+                screenOptions={{headerShown: false}} //remove a flecha de voltar            
+            > 
+                
                 {/*identifica todas as telas na rota e da seus respectivos nomes */}
-                <Stack.Screen name="TabNavigator" component={TabNavigator} />
-                <Stack.Screen name="Inicio" component={Inicio} />
-                <Stack.Screen name="CadastroExame" component={CadastroExame} />
-                <Stack.Screen name="Laudo" component={Laudo} />
-                <Stack.Screen name="Login" component={TelaLogin} />
-                <Stack.Screen name="App" component={TelaApp} />
-                <Stack.Screen name="CadastroPaciente" component={CadastroPaciente} />
+                <Stack.Screen name='TabNavigator' component={TabNavigator}/>
+                <Stack.Screen name='Inicio' component={Inicio}/>
+                <Stack.Screen name='CadastroExame' component={CadastroExame}/>
+                 <Stack.Screen name='Dados' component={Analytics}/>
+                <Stack.Screen name='Laudo' component={Laudo}/>
+                <Stack.Screen name='Login' component={TelaLogin}/>
+                <Stack.Screen name='Cadastro' component={TelaCadastro}/>
+                <Stack.Screen name='App' component={TelaApp}/>
+                
+                
+
             </Stack.Navigator>
-        </NavigationContainer>
-    );
+
+       
+    
+    
+  );
 }
-    
-    
+
+
