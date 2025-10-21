@@ -1,48 +1,50 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, View, ScrollView } from 'react-native';
-import Cabecalho from '../Components/Cabecalho/Cabecalho';
-import Card from '../Components/Cards/Card';
-import { SafeAreaView } from 'react-native-safe-area-context';
+  import { StatusBar } from 'expo-status-bar';
+  import React from 'react';
+  import { StyleSheet, View, ScrollView } from 'react-native';
+  import Cabecalho from '../Components/Cabecalho/Cabecalho';
+  import Card from '../Components/Cards/Card';
+  import { SafeAreaView } from 'react-native-safe-area-context';
 
-export default function Inicio({ navigation }) {
-  return (
-    <>
-      <SafeAreaView style={styles.container}>
-        <Cabecalho />
-        <ScrollView style={styles.body} showsVerticalScrollIndicator={false}>
-          <Card
-            titulo="Cadastro de Pacientes"
-            subtitulo="Aqui você vai cadastrar seus pacientes"
-            imagem={require("../Assets/img/CARD_2_ALUNO.png")}
-          />
-          <Card
+  export default function Inicio({ navigation }) {
+    return (
+      <>
+        <SafeAreaView style={styles.container}>
+          <Cabecalho />
+          <ScrollView style={styles.body} showsVerticalScrollIndicator={false}>
+            <Card
+              titulo="Cadastro de Pacientes"
+              subtitulo="Aqui você vai cadastrar seus pacientes"
+              imagem={require("../Assets/img/CARD_2_ALUNO.png")}
+              local={() => navigation.navigate("CadastroPaciente")}
+            />
+            <Card
             titulo="Consulta"
             subtitulo="Aqui você pode consultar seus pacientes"
             imagem={require("../Assets/img/CARD_1_ALUNO.png")}
-          />
-          <Card
-            titulo="Cadastro de exames"
-            subtitulo="Aqui você vai cadastrar seus exames"
-            imagem={require("../Assets/img/Exame1.png")}
-            local={() => navigation.navigate("CadastroExame")}
-          />
-        </ScrollView>
-      </SafeAreaView>
-    </>
-  );
-}
+            local={() => navigation.navigate("ConsultaPaciente")}
+            />
+            <Card
+              titulo="Cadastro de exames"
+              subtitulo="Aqui você vai cadastrar seus exames"
+              imagem={require("../Assets/img/Exame1.png")}
+              local={() => navigation.navigate("CadastroExame")}
+            />
+          </ScrollView>
+        </SafeAreaView>
+      </>
+    );
+  }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#E3E6E0',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  body: {
-    flex: 1,
-    backgroundColor: '#E3E6E0',
-    width: '90%',
-  },
-});
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: '#E3E6E0',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    body: {
+      flex: 1,
+      backgroundColor: '#E3E6E0',
+      width: '90%',
+    },
+  });
