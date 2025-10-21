@@ -8,8 +8,8 @@ import Laudo from '../Pages/Laudo';
 import TabNavigator from './tabs';
 import TelaApp from '../Pages/TelaApp';
 import TelaLogin from '../Pages/TelaLogin';
-import TelaCadastro from '../Pages/TelaCadastro';
-import Analytics from '../Pages/Analytics';
+import CadastroPaciente from "../Pages/CadastroPaciente";
+import ConsultaPacientes from "../Pages/ConsultaPacientes";
 
 
 export default function Abas() {
@@ -26,20 +26,14 @@ export default function Abas() {
                 <Stack.Screen name='TabNavigator' component={TabNavigator}/>
                 <Stack.Screen name='Inicio' component={Inicio}/>
                 <Stack.Screen name='CadastroExame' component={CadastroExame}/>
-                 <Stack.Screen name='Dados' component={Analytics}/>
                 <Stack.Screen name='Laudo' component={Laudo}/>
                 <Stack.Screen name='Login' component={TelaLogin}/>
-                <Stack.Screen name='Cadastro' component={TelaCadastro}/>
                 <Stack.Screen name='App' component={TelaApp}/>
-                
-                
+                <Stack.Screen name='CadastroPaciente' component={CadastroPaciente} /> 
+                <Stack.Screen name="ConsultaPacientes" component={ConsultaPacientes} />
 
             </Stack.Navigator>
-
-       
+       );
+      } 
     
     
-  );
-}
-
-
