@@ -15,7 +15,7 @@
               titulo="Consulta"
               subtitulo="Aqui você pode consultar seus pacientes"
               imagem={require("../Assets/img/cardAluno.png")}
-              local={() => navigation.getParent()?.navigate("ConsultaPaciente")}
+              local={() => navigation.getParent()?.navigate("ConsultaPacientes")}
             />
             <Card
               titulo="Cadastro de exames"
