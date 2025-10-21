@@ -1,7 +1,7 @@
 import {Text, View, StyleSheet, TextInput} from 'react-native'
 
 //função das inputs que recebem o titulo e o placeholder caso queria edita-lo
-export default function CadastroInput({titulo = "default", placeholder = "digite aqui", tipoTeclado}){
+export default function CadastroInput({titulo = "default", placeholder = "Digite aqui", tipoTeclado}){
 
     return(
         <View style={styles.container}>
@@ -22,15 +22,19 @@ const styles = StyleSheet.create({
         justifyContent:'center',
         alignItems:'center',
         marginTop:10,
-        backgroundColor:'#E3E6E0',
         marginBottom:30,
-    },
+        },
     input:{
-        width:'90%',       
+        marginTop: 10,
+        width:'100%',       
         padding:15,
-        borderRadius:8,
-        borderBottomWidth:1,
-        borderColor:'purple',
+        borderRadius:20,
+        borderColor: '#ddd',
+        flex: 1,
+        height: 50,
+        paddingHorizontal: 15,
+        fontSize: 16,
+        borderWidth: 1  
     },
     titulo:{
         fontSize:20,

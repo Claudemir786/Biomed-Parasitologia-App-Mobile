@@ -6,13 +6,14 @@ import {
   ScrollView,
 } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
+import Cabecalho from '../Components/Cabecalho/Cabecalho';
 
 export default function Analytics({navigation}){
     
   // Dados de exemplo (meses vs parasitas)
   const dados = {
     meses: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
-    parasitas: [25, 30, 35, 42, 48, 55, 62, 68, 75, 82, 88, 95]
+    parasitas: [25, 30, 15, 27, 48, 68, 62, 54, 25, 32, 77, 88]
   };
 
   // Cálculo da regressão linear simples
@@ -62,6 +63,7 @@ export default function Analytics({navigation}){
 
   return (
     <ScrollView style={styles.container}>
+      <Cabecalho/>
       <View style={styles.box}>
         <Text style={styles.title}>Análise de Parasitas</Text>
         <Text style={styles.subtitle}>Regressão Linear - Meses vs Quantidade</Text>
@@ -131,7 +133,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f2f7fb',
   },
-  box: {
+    box: {
     backgroundColor: '#fff',
     margin: 20,
     padding: 25,
