@@ -10,7 +10,7 @@ import TelaApp from '../Pages/TelaApp';
 import TelaLogin from '../Pages/TelaLogin';
 import TelaCadastro from '../Pages/TelaCadastro';
 import Analytics from '../Pages/Analytics';
-
+import Analytics from '../Pages/CadastroPaciente';
 
 export default function Abas() {
 
@@ -31,6 +31,8 @@ export default function Abas() {
                 <Stack.Screen name='Login' component={TelaLogin}/>
                 <Stack.Screen name='Cadastro' component={TelaCadastro}/>
                 <Stack.Screen name='App' component={TelaApp}/>
+                <Stack.Screen name='CadastroPaciente' component={CadastroPaciente}/>
+            
                 
                 
 
