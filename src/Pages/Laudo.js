@@ -1,4 +1,4 @@
-import {View, Text, StyleSheet,SafeAreaView, ScrollView, FlatList} from 'react-native'
+import {View, Text, StyleSheet,SafeAreaView, ScrollView, FlatList, SafeAreaViewBase} from 'react-native'
 import Cabecalho from '../Components/Cabecalho/Cabecalho'
 import Botao from '../Components/BotaoPadrao'
 
@@ -74,14 +74,14 @@ const Lista = ({exame}) =>{
 export default function Laudo({navigation}){
 
     return(
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
             <Cabecalho local1={()=> navigation.navigate("TabNavigator")}/>
 
             <ScrollView style={styles.body}>
 
                 <View style={styles.titulo}> 
 
-                    <Text style={{fontSize:25, fontWeight:'bold'}}>Dados do Exame</Text>
+                    <Text style={{fontSize:25, fontWeight:'bold', color:"#382c81ff"}}>Dados do Exame</Text>
 
                 </View>             
                
@@ -90,31 +90,41 @@ export default function Laudo({navigation}){
                         data={dadosTeste}                       
                         keyExtractor={(item) => item.id}
                         renderItem={({item}) => <Lista exame={item} />}
+                        scrollEnabled={false}
                     
                     />
 
-                <Botao titulo='EXCLUIR EXAME' corBotao='red' corTexto='#fff'/>
+                <Botao titulo='EXCLUIR' corBotao='#750202ff' corTexto='#fff'/>
                 <View style={{marginBottom:15}}></View>
-                <Botao titulo='EDITAR EXAME' corBotao='#0D6EFD' corTexto='#fff'/>
+                <Botao titulo='EDITAR' corBotao='#382c81ff' corTexto='#fff'/>
                 <View style={{marginBottom:80}}></View>    
      
             </ScrollView>    
-        </SafeAreaView>
+        </View>
     )
 }
 
 
 const styles = StyleSheet.create({
     container:{
-          flex:1,
+        flex:1,
         justifyContent:'center',
         alignItems:'center',
         backgroundColor:'#E3E6E0',
     },
     body:{
-         flex: 1,
-        backgroundColor:'#E3E6E0',
-        width:'100%'
+        backgroundColor: '#fff',
+        borderRadius: 20,
+        paddingVertical: 40,
+        paddingHorizontal: 25,
+        width: '90%',
+        alignSelf: 'center',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.15,
+        shadowRadius: 6,
+        elevation: 5,
+        marginBottom: 30,
         
     },
     titulo:{
@@ -126,8 +136,8 @@ const styles = StyleSheet.create({
     linha:{
         flexDirection:'row',
         alignItems:'flex-start',
-        borderBottomWidth:2,
-        borderColor:'#3f319cff',
+        borderBottomWidth:1,
+        borderColor:'#d8cbcbff',
         marginBottom:5,
         padding:15,        
         width:'95%',
