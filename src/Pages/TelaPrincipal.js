@@ -18,10 +18,20 @@
               local={() => navigation.navigate("ConsultaPacientes")}
             />
             <Card
+<<<<<<< HEAD
               titulo="Cadastro de Pacientes"
               subtitulo="Aqui você vai cadastrar seus exames"
               imagem={require("../Assets/img/cardAlunoo.png")}
               local={() => navigation.navigate("CadastroPaciente")}
+=======
+              titulo="Cadastro de exames"
+              subtitulo="Aqui você vai cadastrar seus pacientes"
+              imagem={require("../Assets/img/cardAlunoo.png")}
+
+              local={() => navigation.navigate("CadastroPaciente")}
+
+              
+>>>>>>> 5ef9db3cc697ac3a3c9669650e31fc6cf4cb26d1
             />
             <Card
               titulo="Cadastro de exames"

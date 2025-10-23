@@ -1,4 +1,4 @@
-import { Text, View, StyleSheet, TouchableOpacity, SafeAreaView, ScrollView } from 'react-native'
+import { Text, View, StyleSheet, TouchableOpacity, SafeAreaView, ScrollView, Alert } from 'react-native'
 import Cabecalho from '../Components/Cabecalho/Cabecalho'
 import CadastroInput from '../Components/Cadastro/CadastroInput'
 import Botao from '../Components/BotaoPadrao'
@@ -8,10 +8,24 @@ import DateTimePicker from '@react-native-community/datetimepicker'
 import { useState } from 'react';
 
 export default function CadastroExame({ navigation }) {
+  //Hora e data
   const [data, setData] = useState(new Date());
   const [mostrar, setMostrar] = useState(false);
   const [hora, setHora] = useState(new Date());
   const [mostrarH, setMostrarH] = useState(false);
+
+  //Campos de texto
+  const [nomeP,setNomeP] = useState("");
+  const [tipoAmostra,setTipoAmostra] = useState("");
+  const [tecnica,setTecnica] = useState("");
+  const [consistencia,setConsistencia] = useState("");
+  const [sangue,setSangue] = useState("");
+  const [coloracao,setColoracao] = useState("");
+  const [muco,setMuco] = useState("");
+  const [parasita,setParasita] = useState("");
+  const [aluno,setAluno] = useState("");
+  const [professor,setProfessor] = useState("");
+   
 
   const aoSelecionar = (event, dataSelecionada) => {
     setMostrar(false);
@@ -27,8 +41,21 @@ export default function CadastroExame({ navigation }) {
     }
   };
 
+  const verificaCampos = () => {
+
+    if(!data || !hora || !nomeP || !tecnica || !tipoAmostra || !consistencia || !sangue || !coloracao || !muco || !parasita || !aluno || !professor  ){
+      console.log("os campos não foram digitados: ")
+      alert("Preencha todos os campos antes de enviar")
+
+    }else{
+      console.log("os campos foram digitados corretamente")
+
+    
+    }
+
+  }
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <Cabecalho local1={() => navigation.goBack()} />
 
       <ScrollView style={styles.body} showsVerticalScrollIndicator={false}>
@@ -37,7 +64,7 @@ export default function CadastroExame({ navigation }) {
         <View style={styles.box}>
           <Text style={styles.title}>Cadastro de Exame</Text>
 
-          <CadastroInput  titulo='Nome paciente' />
+          <CadastroInput  titulo='Nome paciente' campo={setNomeP}/>
 
           <Text style={styles.subTitle}>Entrada</Text>
           <TouchableOpacity onPress={() => setMostrarH(true)} style={styles.input}>
@@ -55,22 +82,24 @@ export default function CadastroExame({ navigation }) {
             <DateTimePicker value={data} mode="date" display="default" onChange={aoSelecionar} />
           )}
 
-          <CadastroInput titulo='Tipo de amostra' />
-          <CadastroInput titulo='Técnica utilizada' />
-          <CadastroInput titulo='Consistência' />
-          <CadastroInput titulo='Coloração' />
-          <CadastroInput titulo='Muco' />
-          <CadastroInput titulo='Sangue' />
-          <CadastroInput titulo='Parasita' />
-          <CadastroInput titulo='Responsável pelo exame' />
-          <CadastroInput titulo='Preceptor responsável' />
+          <CadastroInput titulo='Tipo de amostra' campo={setTipoAmostra}/>
+          <CadastroInput titulo='Técnica utilizada' campo={setTecnica}/>
+          <CadastroInput titulo='Consistência' campo={setConsistencia} />
+          <CadastroInput titulo='Coloração' campo={setColoracao} />
+          <CadastroInput titulo='Muco' campo={setMuco} />
+          <CadastroInput titulo='Sangue' campo={setSangue} />
+          <CadastroInput titulo='Parasita' campo={setParasita} />
+          <CadastroInput titulo='Responsável pelo exame' campo={setAluno} />
+          <CadastroInput titulo='Preceptor responsável'  campo={setProfessor}/>
+          
 
-          <Botao corBotao='#382c81ff' corTexto='#fff' local={() => navigation.navigate('Laudo')} />
+          <Botao corBotao='#382c81ff' corTexto='#fff'
+           local={() => verificaCampos(nomeP,hora,data,tipoAmostra,tecnica,consistencia,coloracao,muco,sangue,parasita,aluno,professor)} />
         </View>
 
         <View style={{ marginBottom: 70 }}></View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   )
 }
 
@@ -107,7 +136,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   subTitle: {
-    fontSize: 18,
+    fontSize: 20,
     textAlign: 'center',
     marginBottom: 10,
     color: '#444',
@@ -126,3 +155,5 @@ const styles = StyleSheet.create({
     color: '#333',
   },
 });
+
+//depois verificar o tipo de fuso horario que o backend recebe e tranbsformar a data em uma string antes de enviar
