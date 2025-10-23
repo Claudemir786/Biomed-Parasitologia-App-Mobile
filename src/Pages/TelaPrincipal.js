@@ -21,7 +21,10 @@
               titulo="Cadastro de exames"
               subtitulo="Aqui você vai cadastrar seus pacientes"
               imagem={require("../Assets/img/cardAlunoo.png")}
+
               local={() => navigation.navigate("CadastroPaciente")}
+
+              
             />
             <Card
               titulo="Cadastro de exames"
