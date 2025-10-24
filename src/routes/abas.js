@@ -10,7 +10,7 @@ import TelaApp from '../Pages/TelaApp';
 import TelaLogin from '../Pages/TelaLogin';
 import TelaCadastro from '../Pages/TelaCadastro';
 import Analytics from '../Pages/Analytics';
-import Analytics from '../Pages/CadastroPaciente';
+import CadastroPaciente from '../Pages/CadastroPaciente';
 
 export default function Abas() {
 

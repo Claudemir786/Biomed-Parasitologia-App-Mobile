@@ -6,6 +6,9 @@ import TabNavigator from '../routes/tabs'
 import Abas from '../routes/abas'
 import DateTimePicker from '@react-native-community/datetimepicker'
 import { useState } from 'react';
+import Create from '../Dao/ExameDao'
+
+
 
 export default function CadastroExame({ navigation }) {
   //Hora e data
@@ -41,16 +44,23 @@ export default function CadastroExame({ navigation }) {
     }
   };
 
-  const verificaCampos = () => {
-
-    if(!data || !hora || !nomeP || !tecnica || !tipoAmostra || !consistencia || !sangue || !coloracao || !muco || !parasita || !aluno || !professor  ){
-      console.log("os campos não foram digitados: ")
+  async function handleCreate(){
+    try{
+    if(!data || !hora || !nomeP || !tecnica || !tipoAmostra || !consistencia || !sangue || !coloracao || !muco || !parasita || !aluno || !professor){
+      console.log("os campos não foram digitados")
       alert("Preencha todos os campos antes de enviar")
 
     }else{
-      console.log("os campos foram digitados corretamente")
-
-    
+      console.log("os campos foram digitados corretamente");
+      await Create({cdata: data,chora: hora, ctecnica:tecnica, ctipoAmostra: tipoAmostra, cconsistencia: consistencia, csangue: sangue, ccolocarcao:coloracao, cmuco:muco,
+        cparasita:parasita, caluno:aluno,cprofessor:professor});
+      
+      alert("cadastro Realizado com sucesso");
+      navigation.navigate("Laudo");    
+    }
+    }catch(erro){
+      console.log("Erro no handle ", erro);
+      alert("Erro: cadastro de exame não funcionou");
     }
 
   }
@@ -94,7 +104,7 @@ export default function CadastroExame({ navigation }) {
           
 
           <Botao corBotao='#382c81ff' corTexto='#fff'
-           local={() => verificaCampos(nomeP,hora,data,tipoAmostra,tecnica,consistencia,coloracao,muco,sangue,parasita,aluno,professor)} />
+           local={() => handleCreate()}/>
         </View>
 
         <View style={{ marginBottom: 70 }}></View>
@@ -156,4 +166,3 @@ const styles = StyleSheet.create({
   },
 });
 
-//depois verificar o tipo de fuso horario que o backend recebe e tranbsformar a data em uma string antes de enviar
