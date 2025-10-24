@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import Cabecalho from "../Components/Cabecalho/Cabecalho";
 
-export default function ConsultaPaciente({ navigation }) {
+export default function ConsultaPacientes({ navigation }) {
   const [cpf, setCpf] = useState("");
   const [paciente, setPaciente] = useState(null);
   const [exames, setExames] = useState([]);
