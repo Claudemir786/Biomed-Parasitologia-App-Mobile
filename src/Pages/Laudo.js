@@ -71,8 +71,8 @@ const Lista = ({exame}) =>{
 
 }
 
-export default function Laudo({navigation}){
-
+export default function Laudo({navigation, route}){
+     const {id} = route.params;
     return(
         <View style={styles.container}>
             <Cabecalho local1={()=> navigation.navigate("TabNavigator")}/>
@@ -99,7 +99,8 @@ export default function Laudo({navigation}){
                 <Botao titulo='EDITAR' corBotao='#382c81ff' corTexto='#fff'/>
                 <View style={{marginBottom:80}}></View>    
      
-            </ScrollView>    
+            </ScrollView>  
+            <Text>Valor enviado da outra pagina {id}</Text>  
         </View>
     )
 }

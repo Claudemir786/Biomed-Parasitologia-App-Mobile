@@ -6,7 +6,8 @@ import TabNavigator from '../routes/tabs'
 import Abas from '../routes/abas'
 import DateTimePicker from '@react-native-community/datetimepicker'
 import { useState } from 'react';
-import Create from '../Dao/ExameDao'
+import {Create, Read} from '../Dao/ExameDao'
+
 
 
 
@@ -16,6 +17,8 @@ export default function CadastroExame({ navigation }) {
   const [mostrar, setMostrar] = useState(false);
   const [hora, setHora] = useState(new Date());
   const [mostrarH, setMostrarH] = useState(false);
+  const [dataEntrega, setDataEntrega] = useState(new Date()); 
+  const [mostrarD, setMostrarD] = useState(false);
 
   //Campos de texto
   const [nomeP,setNomeP] = useState("");
@@ -28,7 +31,7 @@ export default function CadastroExame({ navigation }) {
   const [parasita,setParasita] = useState("");
   const [aluno,setAluno] = useState("");
   const [professor,setProfessor] = useState("");
-   
+  
 
   const aoSelecionar = (event, dataSelecionada) => {
     setMostrar(false);
@@ -44,19 +47,39 @@ export default function CadastroExame({ navigation }) {
     }
   };
 
+   const aoSelecionarD = (event, dataSelecionada) => {
+    setMostrarD(false);
+    if (dataSelecionada) {
+      setDataEntrega(dataSelecionada);
+    }
+  };
+
   async function handleCreate(){
     try{
-    if(!data || !hora || !nomeP || !tecnica || !tipoAmostra || !consistencia || !sangue || !coloracao || !muco || !parasita || !aluno || !professor){
+    if(!data || !hora || !dataEntrega || !nomeP || !tecnica || !tipoAmostra || !consistencia || !sangue || !coloracao || !muco || !parasita || !aluno || !professor){
       console.log("os campos não foram digitados")
       alert("Preencha todos os campos antes de enviar")
 
     }else{
       console.log("os campos foram digitados corretamente");
-      await Create({cdata: data,chora: hora, ctecnica:tecnica, ctipoAmostra: tipoAmostra, cconsistencia: consistencia, csangue: sangue, ccolocarcao:coloracao, cmuco:muco,
-        cparasita:parasita, caluno:aluno,cprofessor:professor});
+      //envia os dados para a função que prepara para enviar para API um detalhe é que os campos tem que estar igual ao da API
+      const resultado = await Create({paciente:nomeP ,entrada: hora.toTimeString().split(' ')[0], data_exame: data.toISOString().split('T')[0], data_entrega: dataEntrega.toISOString().split('T')[0], 
+                  tipo_amostra: tipoAmostra, tecnica:tecnica, parasita:parasita, consistencia: consistencia, coloracao:coloracao, muco:muco, sangue: sangue, 
+                   aluno:aluno,professor:professor});
       
-      alert("cadastro Realizado com sucesso");
-      navigation.navigate("Laudo");    
+      //retorno que vem da API que no caso se trata de um json             
+      if(resultado){
+        
+          alert("cadastro Realizado com sucesso");
+          console.log("Dados retornados do banco: ", resultado);
+         const idRetornado = resultado.id;
+          console.log(idRetornado);
+          //envia para outra pagina o id do exame criado//
+          navigation.navigate("Laudo", {id: idRetornado});    
+      
+      }    
+
+      
     }
     }catch(erro){
       console.log("Erro no handle ", erro);
@@ -84,12 +107,19 @@ export default function CadastroExame({ navigation }) {
             <DateTimePicker value={hora} mode="time" display="default" onChange={aoSelecionarH} />
           )}
 
-          <Text style={styles.subTitle}>Data prevista para entrega</Text>
+          <Text style={styles.subTitle}>Data Exame</Text>
           <TouchableOpacity onPress={() => setMostrar(true)} style={styles.input}>
             <Text style={styles.inputText}>{data.toLocaleDateString('pt-Br')}</Text>
           </TouchableOpacity>
           {mostrar && (
             <DateTimePicker value={data} mode="date" display="default" onChange={aoSelecionar} />
+          )}
+          <Text style={styles.subTitle}>Data prevista para entrega</Text>
+          <TouchableOpacity onPress={() => setMostrar(true)} style={styles.input}>
+            <Text style={styles.inputText}>{dataEntrega.toLocaleDateString('pt-Br')}</Text>
+          </TouchableOpacity>
+          {mostrarD && (
+            <DateTimePicker value={dataEntrega} mode="date" display="default" onChange={aoSelecionarD} />
           )}
 
           <CadastroInput titulo='Tipo de amostra' campo={setTipoAmostra}/>

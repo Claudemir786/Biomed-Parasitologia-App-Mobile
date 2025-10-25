@@ -1,7 +1,7 @@
 import { registerRootComponent } from 'expo';
 
 //mport Abas from './src/routes/abas';
-//import Laudo from './src/Pages/Laudo';
+//import Laudo from './src/Pages/CadastroExame';
 import App from './App'
 
 // registerRootComponent calls AppRegistry.registerComponent('main', () => App);

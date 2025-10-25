@@ -7,7 +7,34 @@ const AUTH_HEADER = {
 }//cabeçalho da requisição 
 
 export async function Create(exame){
-    console.log("cheguei aqui ", exame);
+  try{
+    //Faz os campos de id viararem inteiros 
+    exame.paciente = parseInt( exame.paciente)
+    exame.aluno = parseInt(exame.aluno);
+    exame.professor = parseInt(exame.professor);
+    
+    //usado para testes
+    let dadosFormulario = JSON.stringify(exame);
+    console.log("Dados que veio do formulario: ", dadosFormulario);
+
+    //chamando a requisição
+    const res = await fetch(`${BASE_URL}exame`,{
+      method:"POST",
+      headers: AUTH_HEADER,
+      body: JSON.stringify(exame)
+    });  
+
+    //json que retorna do banco com o estado(sucess) e o id do exame criado
+    const id = await res.json();  
+      
+    return id;
+    
+  }catch(erro){
+
+    console.error("Erro ao realizar requisição POST: ", erro);
+    return false
+  }
+    
 }
 
 export async function Update(){
@@ -19,5 +46,6 @@ export async function Delete(){
 }
 
 export async function Read(){
-
+  console.log("cheguei no Read")
+   return "cheguei no read";
 }
