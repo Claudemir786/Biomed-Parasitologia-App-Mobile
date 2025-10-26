@@ -1,17 +1,22 @@
-import { Text, View, StyleSheet, TouchableOpacity, SafeAreaView, ScrollView, Alert } from 'react-native'
+import { Text, View, StyleSheet, TouchableOpacity, SafeAreaView, ScrollView, Alert, FlatList } from 'react-native'
 import Cabecalho from '../Components/Cabecalho/Cabecalho'
 import CadastroInput from '../Components/Cadastro/CadastroInput'
 import Botao from '../Components/BotaoPadrao'
 import TabNavigator from '../routes/tabs'
 import Abas from '../routes/abas'
 import DateTimePicker from '@react-native-community/datetimepicker'
-import { useState } from 'react';
-import {Create, Read} from '../Dao/ExameDao'
+import { useState, useEffect } from 'react';
+import {Create, Read, ReadAlunos, ReadPacientes, ReadProfessores} from '../Dao/ExameDao'
+import { Picker } from 'react-native-web'
 
 
 
 
 export default function CadastroExame({ navigation }) {
+  //listas das select
+  const [pacientes,setPacientes] = useState([]);
+  const [professores, setProfessores] = useState([]);
+  const [alunos, setAlunos] = useState([]); 
   //Hora e data
   const [data, setData] = useState(new Date());
   const [mostrar, setMostrar] = useState(false);
@@ -54,6 +59,55 @@ export default function CadastroExame({ navigation }) {
     }
   };
 
+  async function handleReadPacientes(){
+    try{
+    const getPacientes = await ReadPacientes();
+
+    if(getPacientes){
+      setPacientes(getPacientes);//seta no array
+      console.log("pacientes retornados na pagina: ", pacientes);    
+      
+    }else{
+      console.error("Não retornou nada da API")
+    }
+  }catch(erro){
+    console.error("Erro ao trazer os dados de pacientes para a pagina");
+  }
+  }
+
+  async function handleReadAlunos(){
+    try{
+      const getAlunos = await ReadAlunos();
+
+      if(getAlunos){
+        setAlunos(getAlunos);
+        console.log("Alunos retornados na pagina: ", alunos);
+      }else{
+        console.error("não retornou nada da API");
+      }
+
+    }catch(erro){
+       console.error("Erro ao trazer os dados de pacientes para a pagina");
+  }
+    }
+
+    async function handleReadProfessor(){
+      try{
+        const getProfessores = await ReadProfessores();
+
+        if(getProfessores){
+          setProfessores(getProfessores);
+          console.log("Professores retornados da API: ", professores);
+        }else{
+          console.error("Não retornou nen hum dados da API");
+        }
+
+      }catch(erro){
+        console.log("Erro ao trazer os professores para a pagina");
+      }
+    }
+  
+
   async function handleCreate(){
     try{
     if(!data || !hora || !dataEntrega || !nomeP || !tecnica || !tipoAmostra || !consistencia || !sangue || !coloracao || !muco || !parasita || !aluno || !professor){
@@ -77,16 +131,21 @@ export default function CadastroExame({ navigation }) {
           //envia para outra pagina o id do exame criado//
           navigation.navigate("Laudo", {id: idRetornado});    
       
-      }    
-
-      
+      }      
     }
     }catch(erro){
       console.log("Erro no handle ", erro);
       alert("Erro: cadastro de exame não funcionou");
     }
-
   }
+
+  useEffect(() =>{
+    console.log("carregando os dados antes de renderizar a tela");
+    handleReadAlunos();
+    handleReadPacientes();
+    handleReadProfessor();
+  }, []);
+
   return (
     <View style={styles.container}>
       <Cabecalho local1={() => navigation.goBack()} />
@@ -97,8 +156,23 @@ export default function CadastroExame({ navigation }) {
         <View style={styles.box}>
           <Text style={styles.title}>Cadastro de Exame</Text>
 
-          <CadastroInput  titulo='Nome paciente' campo={setNomeP}/>
-
+          {/*SELECT DE NOME DE PACIENTE*/ }
+          <Text style={{textAlign:'center', fontSize:20,}}>Paciente</Text>
+          <Picker
+            selectedValue={nomeP}
+            onValueChange={(valor) => setNomeP(valor)}
+            style={[styles.select, {marginBottom:20}]}
+          >
+            <Picker.Item label = "Selecione um paciente" value=""/>
+            {pacientes.map((paciente)=>(
+              <Picker.Item
+              key={paciente.id}
+              label={paciente.nome}
+              value={paciente.id}              
+              />
+            ))}
+          </Picker>         
+          
           <Text style={styles.subTitle}>Entrada</Text>
           <TouchableOpacity onPress={() => setMostrarH(true)} style={styles.input}>
             <Text style={styles.inputText}>{hora.toLocaleTimeString('pt-Br')}</Text>
@@ -129,16 +203,49 @@ export default function CadastroExame({ navigation }) {
           <CadastroInput titulo='Muco' campo={setMuco} />
           <CadastroInput titulo='Sangue' campo={setSangue} />
           <CadastroInput titulo='Parasita' campo={setParasita} />
-          <CadastroInput titulo='Responsável pelo exame' campo={setAluno} />
-          <CadastroInput titulo='Preceptor responsável'  campo={setProfessor}/>
-          
+          {/*SELECT DE NOME ALUNO*/}
+          <Text style={{textAlign:'center', fontSize:20,}}>Aluno Responsavel</Text>
+         <Picker
+            selectedValue={aluno}
+            onValueChange={(valor) => setAluno(valor)}
+            style={[styles.select, {marginBottom:20}]}
+          >
+            <Picker.Item label = "Aluno Responsavel" value=""/>
+            {alunos.map((aluno)=>(
+              <Picker.Item
+              key={aluno.id}
+              label={aluno.nome}
+              value={aluno.id}              
+              />
+            ))}
+          </Picker>
+               
+           {/*SELECT DE NOME PROFESSOR*/}
+           <Text style={{textAlign:'center', fontSize:20,}}>Professor Responsavel</Text>
+         <Picker
+            selectedValue={professor}
+            onValueChange={(valor) => setProfessor(valor)}
+            style={[styles.select, {marginBottom:20}]}
+          >
+            <Picker.Item label = "Professor Responsavel" value=""/>
+            {professores.map((professores)=>(
+              <Picker.Item
+              key={professores.id}
+              label={professores.nome}
+              value={professores.id}              
+              />
+            ))}
+          </Picker>     
+        
 
           <Botao corBotao='#382c81ff' corTexto='#fff'
            local={() => handleCreate()}/>
+           
         </View>
 
         <View style={{ marginBottom: 70 }}></View>
       </ScrollView>
+     
     </View>
   )
 }
@@ -189,6 +296,18 @@ const styles = StyleSheet.create({
     padding: 15,
     width: '100%',
     marginBottom: 20,
+  },
+  select:{
+    marginTop: 10,
+    width:'100%',       
+    padding:15,
+    borderRadius:20,
+    borderColor: '#ddd',
+    flex: 1,
+    height: 50,
+    paddingHorizontal: 15,
+    fontSize: 16,
+    borderWidth: 1  
   },
   inputText: {
     fontSize: 16,

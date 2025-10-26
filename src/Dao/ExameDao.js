@@ -49,3 +49,65 @@ export async function Read(){
   console.log("cheguei no Read")
    return "cheguei no read";
 }
+
+export async function ReadPacientes(){
+
+  try{
+  //chamando a requisição
+  console.log("chegeui na função Dao front ")
+  const res = await fetch(`${BASE_URL}pacientes`,{
+    method:"GET",
+    headers: AUTH_HEADER  
+  });
+  console.log("conteudo do response: ", res);
+  const pacientes = await res.json();
+
+  return pacientes;
+
+  }catch(erro){
+    console.error("Erro ao fazer a requisição GET Pacientes: ", erro);
+    return false;
+  }
+
+  
+
+}
+
+export async function ReadAlunos(){
+  try{
+     //chamando a requisição
+    console.log("chegeui na função Dao front ")
+    const res = await fetch(`${BASE_URL}alunos`, {
+      method:"GET",
+      headers: AUTH_HEADER 
+    });
+
+    console.log("Conteudo do response: ", res);
+    const alunos = await res.json();
+    return alunos;
+
+  }catch(erro){
+    console.error("Erro ao fazer requisição GET pacientes: ", erro);
+    return false;
+  }
+}
+
+export async function ReadProfessores(){
+  try{
+     //chamando a requisição
+    console.log("chegeui na função Dao front ")
+    const res = await fetch(`${BASE_URL}professores`, {
+      method:"GET",
+      headers: AUTH_HEADER
+    });
+
+    console.log("conteudo retornado do response: ", res);
+    const professores = await res.json();
+    return professores;
+
+
+  }catch(erro){
+      console.log("Erro ao fazer requisição GET professores: ", erro);
+      return false;
+  }
+}
