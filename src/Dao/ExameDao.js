@@ -45,9 +45,44 @@ export async function Delete(){
 
 }
 
-export async function Read(){
-  console.log("cheguei no Read")
-   return "cheguei no read";
+export async function Read(id){
+ try{
+
+    const res = await fetch(`${BASE_URL}exame/${id}`,{
+      method: "GET",
+      headers: AUTH_HEADER
+    });
+
+    console.log("conteudo do response: ", res);
+    const exame = await res.json();
+
+    return exame;
+
+ }catch(erro){
+  console.error("Erro ao fazer a requisição GETID: ", erro);
+  return false;
+ }
+}
+
+export async function ReadpacienteId(id){
+  try{
+    const res = await fetch(`${BASE_URL}pacientes/${id}`,{
+      method: "GET",
+      headers: AUTH_HEADER
+    });
+     console.log("conteudo do response paciente id: ", res);
+     if(res){
+       const paciente = await res.json();
+       
+       return paciente;
+
+     }
+    
+
+  }catch(erro){
+  console.error("Erro ao fazer requisição GET PACIENTEID: ", erro);
+  }
+
 }
 
 export async function ReadPacientes(){
@@ -72,6 +107,8 @@ export async function ReadPacientes(){
   
 
 }
+
+
 
 export async function ReadAlunos(){
   try{

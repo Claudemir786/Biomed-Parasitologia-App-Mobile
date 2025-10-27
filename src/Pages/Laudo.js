@@ -1,28 +1,24 @@
 import {View, Text, StyleSheet,SafeAreaView, ScrollView, FlatList, SafeAreaViewBase} from 'react-native'
 import Cabecalho from '../Components/Cabecalho/Cabecalho'
 import Botao from '../Components/BotaoPadrao'
+import { Read, ReadpacienteId } from '../Dao/ExameDao'
+import {useState, useEffect} from 'react'
 
-const dadosTeste = [{
-    "id": 1, "paciente": "Maria", "dataExame": "13-12-2024", "entrada": "14:00", "tipoAmostra": "teste",
-    "tecnica": "test", "consistencia": "teste", "sangue": "teste", "coloracao": "teste", "muco": "sim", "parasita":"teste",
-    "alunoResponsavel": "Raquel", "professorResponsavel": "Claudemir Junior"
-}]
-
-const Lista = ({exame}) =>{
+const Lista = ({exame, nome}) =>{
 
     return(
         <View style={{marginBottom:50}}>
             <View style={styles.linha}>
                 <Text style={styles.subtitulo}>Paciente ID: </Text>
-                <Text style={styles.dadosReturm}>Teste {exame?.id}</Text>
+                <Text style={styles.dadosReturm}>{exame?.id}</Text>
             </View>
             <View style={styles.linha}>
                 <Text style={styles.subtitulo}>Paciente:</Text>
-                <Text style={styles.dadosReturm}>{exame?.paciente}</Text>
+                <Text style={styles.dadosReturm}>{nome}</Text>
             </View>
             <View style={styles.linha}>
                 <Text style={styles.subtitulo}>Data do Exame:</Text>
-                <Text style={styles.dadosReturm}>{exame?.dataExame}</Text>
+                <Text style={styles.dadosReturm}>{exame?.data_exame}</Text>
             </View >
               <View style={styles.linha}>
                 <Text style={styles.subtitulo}>Entrada:</Text>
@@ -30,7 +26,7 @@ const Lista = ({exame}) =>{
             </View>
             <View style={styles.linha}>
                 <Text style={styles.subtitulo}>Tipo de Amostra:</Text>
-                <Text style={styles.dadosReturm}>{exame?.tipoAmostra}</Text>
+                <Text style={styles.dadosReturm}>{exame?.tipo_amostra}</Text>
             </View>
             <View style={styles.linha}>
                 <Text style={styles.subtitulo}>Tecnica:</Text>
@@ -58,11 +54,11 @@ const Lista = ({exame}) =>{
             </View>
             <View style={styles.linha}>
                 <Text style={styles.subtitulo}>Aluno Responsavel:</Text>
-                <Text style={styles.dadosReturm}>{exame?.alunoResponsavel}</Text>
+                <Text style={styles.dadosReturm}>{exame?.aluno_id}</Text>
             </View>
             <View style={styles.linha}>
                 <Text style={styles.subtitulo}>Professor Responsavel:</Text>
-                <Text style={styles.dadosReturm}>{exame?.professorResponsavel}</Text>
+                <Text style={styles.dadosReturm}>{exame?.professor_id}</Text>
             </View>
          
             
@@ -72,9 +68,95 @@ const Lista = ({exame}) =>{
 }
 
 export default function Laudo({navigation, route}){
-     const {id} = route.params;
-    return(
-        <View style={styles.container}>
+    if(route){
+        const {id} = route.params;
+        const [exame,setExame] = useState([]);
+        const [nome, setNome] = useState("");
+
+        useEffect(() => {
+            handleId(); //espera a primeira rodar para encontrar o id paciente
+   
+        },[]);
+
+        async function handleId(){
+            try{
+                const dadosExame = await Read(id);
+
+                if(dadosExame){
+                    console.log("dados retornado da Dao exame: ", dadosExame);
+                    setExame(dadosExame);
+                    const idPaciente = dadosExame[0].paciente_id;//pega o id de paciente
+                    console.log("id do paciente: ", idPaciente);
+
+                    const nomeP = await handleBuscanome(idPaciente);//chama a função para buscar o nome pelo id
+                    if(nomeP){
+                        console.log("nome do paciente: ", nomeP);
+                        setNome(nomeP);
+                    }else{
+                        console.error("Erro ao setar nome do paciente");
+                    }
+                   
+                }else{
+                    console.error("erro ao voltar dados da Dao exame")
+                }
+
+            }catch(erro){
+                console.error("erro ao trazer dados de exame para a página");
+            }
+        }
+
+        async function handleBuscanome(id){
+            try{               
+                console.log("cheguei aqui")
+                const nomePaciente = await ReadpacienteId(id);
+
+                if(nomePaciente){
+                    console.log("nome do paciente: ", nomePaciente)
+                    return nomePaciente.nome;
+                    
+                }else{
+                    return false;
+                }
+
+            }catch(erro){
+                console.log("erro ao trazer o nome do paciente: ", erro);
+            }
+        }
+
+
+        return(
+            <View style={styles.container}>
+                <Cabecalho local1={()=> navigation.navigate("TabNavigator")}/>
+
+                <ScrollView style={styles.body}>
+
+                    <View style={styles.titulo}> 
+
+                        <Text style={{fontSize:25, fontWeight:'bold', color:"#382c81ff"}}>Dados do Exame</Text>
+
+                    </View>             
+                
+                        <FlatList
+
+                            data={exame}                       
+                            keyExtractor={(item) => item.id}
+                            renderItem={({item}) => <Lista exame={item} nome={nome} />}
+                            scrollEnabled={false}
+                        
+                        />
+
+                    <Botao titulo='EXCLUIR' corBotao='#750202ff' corTexto='#fff'/>
+                    <View style={{marginBottom:15}}></View>
+                    <Botao titulo='EDITAR' corBotao='#382c81ff' corTexto='#fff'/>
+                    <View style={{marginBottom:80}}></View>    
+        
+                </ScrollView>  
+                <Text>Valor enviado da outra pagina {id}</Text>  
+            </View>
+        )
+    }else{
+        return(
+            <View style={styles.container}>
             <Cabecalho local1={()=> navigation.navigate("TabNavigator")}/>
 
             <ScrollView style={styles.body}>
@@ -83,26 +165,19 @@ export default function Laudo({navigation, route}){
 
                     <Text style={{fontSize:25, fontWeight:'bold', color:"#382c81ff"}}>Dados do Exame</Text>
 
-                </View>             
-               
-                     <FlatList
-
-                        data={dadosTeste}                       
-                        keyExtractor={(item) => item.id}
-                        renderItem={({item}) => <Lista exame={item} />}
-                        scrollEnabled={false}
-                    
-                    />
-
-                <Botao titulo='EXCLUIR' corBotao='#750202ff' corTexto='#fff'/>
+                </View>         
+                <Text style={{fontSize:20, marginBottom:20, textAlign:'center'}}>Não foram encontrados dados de exame valido </Text>
+                <Botao titulo='VOLTAR' corBotao='#750202ff' corTexto='#fff' local={()=> navigation.navigate("Inicio")}/>
                 <View style={{marginBottom:15}}></View>
-                <Botao titulo='EDITAR' corBotao='#382c81ff' corTexto='#fff'/>
-                <View style={{marginBottom:80}}></View>    
+                  
      
             </ScrollView>  
-            <Text>Valor enviado da outra pagina {id}</Text>  
+            
         </View>
     )
+        
+    }
+   
 }
 
 
