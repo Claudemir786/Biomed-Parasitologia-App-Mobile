@@ -65,7 +65,7 @@ export default function CadastroExame({ navigation }) {
 
     if(getPacientes){
       setPacientes(getPacientes);//seta no array
-      console.log("pacientes retornados na pagina: ", pacientes);    
+      //console.log("pacientes retornados na pagina: ", pacientes);    
       
     }else{
       console.error("Não retornou nada da API")
@@ -81,7 +81,7 @@ export default function CadastroExame({ navigation }) {
 
       if(getAlunos){
         setAlunos(getAlunos);
-        console.log("Alunos retornados na pagina: ", alunos);
+        //console.log("Alunos retornados na pagina: ", alunos);
       }else{
         console.error("não retornou nada da API");
       }
@@ -97,7 +97,7 @@ export default function CadastroExame({ navigation }) {
 
         if(getProfessores){
           setProfessores(getProfessores);
-          console.log("Professores retornados da API: ", professores);
+         // console.log("Professores retornados da API: ", professores);
         }else{
           console.error("Não retornou nen hum dados da API");
         }
@@ -125,9 +125,9 @@ export default function CadastroExame({ navigation }) {
       if(resultado){
         
           alert("cadastro Realizado com sucesso");
-          console.log("Dados retornados do banco: ", resultado);
+          //console.log("Dados retornados do banco: ", resultado);
          const idRetornado = resultado.id;
-          console.log(idRetornado);
+          //console.log(idRetornado);
           //envia para outra pagina o id do exame criado//
           navigation.navigate("Laudo", {id: idRetornado});    
       

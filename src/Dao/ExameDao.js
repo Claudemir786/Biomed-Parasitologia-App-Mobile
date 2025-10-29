@@ -15,7 +15,7 @@ export async function Create(exame){
     
     //usado para testes
     let dadosFormulario = JSON.stringify(exame);
-    console.log("Dados que veio do formulario: ", dadosFormulario);
+    //console.log("Dados que veio do formulario: ", dadosFormulario);
 
     //chamando a requisição
     const res = await fetch(`${BASE_URL}exame`,{
@@ -70,31 +70,71 @@ export async function ReadpacienteId(id){
       method: "GET",
       headers: AUTH_HEADER
     });
-     console.log("conteudo do response paciente id: ", res);
+     //console.log("conteudo do response paciente id: ", res);
      if(res){
        const paciente = await res.json();
        
        return paciente;
 
      }
-    
+    return false
 
   }catch(erro){
-  console.error("Erro ao fazer requisição GET PACIENTEID: ", erro);
+    console.error("Erro ao fazer requisição GET PACIENTEID: ", erro);
+    return false
   }
 
+}
+
+export async function ReadProfessorId(id){
+  try{
+
+    const res = await fetch(`${BASE_URL}professor/${id}`, {
+      method: 'GET',
+      headers:AUTH_HEADER
+    });
+
+    if(res){
+      const professor = await res.json();
+      return professor;
+    }
+    return false;
+
+  }catch(erro){
+    console.error("Erro a fazer a requisição PROFESSSORID: ", erro);
+    return false;
+  }
+}
+
+export async function ReadAlunoId(id){
+  try{
+    const res = await fetch(`${BASE_URL}aluno/${id}`,{ 
+      method: "GET",
+      headers: AUTH_HEADER
+  })
+
+  if(res){
+    const aluno = res.json();
+    return aluno;
+  }
+  return false;
+
+  }catch(erro){
+    console.log("Erro ao fazer a requisição ALUNOID: ", erro);
+    return false;
+  }
 }
 
 export async function ReadPacientes(){
 
   try{
   //chamando a requisição
-  console.log("chegeui na função Dao front ")
+  //console.log("chegeui na função Dao front ")
   const res = await fetch(`${BASE_URL}pacientes`,{
     method:"GET",
     headers: AUTH_HEADER  
   });
-  console.log("conteudo do response: ", res);
+  //console.log("conteudo do response: ", res);
   const pacientes = await res.json();
 
   return pacientes;
@@ -113,13 +153,13 @@ export async function ReadPacientes(){
 export async function ReadAlunos(){
   try{
      //chamando a requisição
-    console.log("chegeui na função Dao front ")
+    //console.log("chegeui na função Dao front ")
     const res = await fetch(`${BASE_URL}alunos`, {
       method:"GET",
       headers: AUTH_HEADER 
     });
 
-    console.log("Conteudo do response: ", res);
+    //console.log("Conteudo do response: ", res);
     const alunos = await res.json();
     return alunos;
 
@@ -132,13 +172,13 @@ export async function ReadAlunos(){
 export async function ReadProfessores(){
   try{
      //chamando a requisição
-    console.log("chegeui na função Dao front ")
+    //console.log("chegeui na função Dao front ")
     const res = await fetch(`${BASE_URL}professores`, {
       method:"GET",
       headers: AUTH_HEADER
     });
 
-    console.log("conteudo retornado do response: ", res);
+    //console.log("conteudo retornado do response: ", res);
     const professores = await res.json();
     return professores;
 

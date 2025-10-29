@@ -1,10 +1,10 @@
 import {View, Text, StyleSheet,SafeAreaView, ScrollView, FlatList, SafeAreaViewBase} from 'react-native'
 import Cabecalho from '../Components/Cabecalho/Cabecalho'
 import Botao from '../Components/BotaoPadrao'
-import { Read, ReadpacienteId } from '../Dao/ExameDao'
+import { Read, ReadpacienteId, ReadAlunoId, ReadProfessorId } from '../Dao/ExameDao'
 import {useState, useEffect} from 'react'
 
-const Lista = ({exame, nome}) =>{
+const Lista = ({exame, nome,professor, aluno, data}) =>{
 
     return(
         <View style={{marginBottom:50}}>
@@ -18,7 +18,7 @@ const Lista = ({exame, nome}) =>{
             </View>
             <View style={styles.linha}>
                 <Text style={styles.subtitulo}>Data do Exame:</Text>
-                <Text style={styles.dadosReturm}>{exame?.data_exame}</Text>
+                <Text style={styles.dadosReturm}>{data}</Text>
             </View >
               <View style={styles.linha}>
                 <Text style={styles.subtitulo}>Entrada:</Text>
@@ -54,11 +54,11 @@ const Lista = ({exame, nome}) =>{
             </View>
             <View style={styles.linha}>
                 <Text style={styles.subtitulo}>Aluno Responsavel:</Text>
-                <Text style={styles.dadosReturm}>{exame?.aluno_id}</Text>
+                <Text style={styles.dadosReturm}>{aluno}</Text>
             </View>
             <View style={styles.linha}>
                 <Text style={styles.subtitulo}>Professor Responsavel:</Text>
-                <Text style={styles.dadosReturm}>{exame?.professor_id}</Text>
+                <Text style={styles.dadosReturm}>{professor}</Text>
             </View>
          
             
@@ -68,10 +68,13 @@ const Lista = ({exame, nome}) =>{
 }
 
 export default function Laudo({navigation, route}){
-    if(route){
+    if(route){ //se a pagina for chamada com o envio de id
         const {id} = route.params;
         const [exame,setExame] = useState([]);
         const [nome, setNome] = useState("");
+        const [professor, setProfessor] = useState("");
+        const [aluno, setAluno] = useState(""); 
+        const [data, setData] = useState(new Date());
 
         useEffect(() => {
             handleId(); //espera a primeira rodar para encontrar o id paciente
@@ -83,19 +86,32 @@ export default function Laudo({navigation, route}){
                 const dadosExame = await Read(id);
 
                 if(dadosExame){
-                    console.log("dados retornado da Dao exame: ", dadosExame);
-                    setExame(dadosExame);
-                    const idPaciente = dadosExame[0].paciente_id;//pega o id de paciente
-                    console.log("id do paciente: ", idPaciente);
+                    //console.log("dados retornado da Dao exame: ", dadosExame);
+                    setExame(dadosExame);                    
+                    const dataApi = dadosExame[0].data_exame;//arrumando a data
+                    const arrumandoData = new Date(dataApi);
+                    const dataCerta = arrumandoData.toLocaleDateString("pt-br")
+                    setData(dataCerta);;       
+                    const idPaciente = dadosExame[0].paciente_id;//pega o id de paciente                   
+                    const idProfessor = dadosExame[0].professor_id;
+                    const idAluno = dadosExame[0].aluno_id;            
 
+                    //console.log("id do paciente: ", idPaciente);
+                    //console.log("id do professor ", idProfessor);
                     const nomeP = await handleBuscanome(idPaciente);//chama a função para buscar o nome pelo id
-                    if(nomeP){
-                        console.log("nome do paciente: ", nomeP);
+                    const nomeProfessor = await buscaNomeProfessor(idProfessor);
+                    const nomeAluno = await buscaNomeALuno(idAluno);
+                    if(nomeP && nomeProfessor && nomeAluno){
+                        //console.log("nome do paciente: ", nomeP);
+                        //console.log("nome do paciente: ", nomeProfessor);
                         setNome(nomeP);
+                        setProfessor(nomeProfessor);
+                        setAluno(nomeAluno);
+                        
                     }else{
                         console.error("Erro ao setar nome do paciente");
                     }
-                   
+                 
                 }else{
                     console.error("erro ao voltar dados da Dao exame")
                 }
@@ -107,11 +123,11 @@ export default function Laudo({navigation, route}){
 
         async function handleBuscanome(id){
             try{               
-                console.log("cheguei aqui")
+                //console.log("cheguei aqui")
                 const nomePaciente = await ReadpacienteId(id);
 
                 if(nomePaciente){
-                    console.log("nome do paciente: ", nomePaciente)
+                    //console.log("nome do paciente: ", nomePaciente)
                     return nomePaciente.nome;
                     
                 }else{
@@ -121,6 +137,31 @@ export default function Laudo({navigation, route}){
             }catch(erro){
                 console.log("erro ao trazer o nome do paciente: ", erro);
             }
+        }
+
+        async function buscaNomeProfessor(idProfessor){
+            try{
+                const nomeProfessor = await ReadProfessorId(idProfessor);
+
+                if(nomeProfessor)return nomeProfessor[0].nome;                  
+              
+                return false;               
+
+            }catch(erro){
+                console.error("Erro ao buscar nome do professor: ", erro);            
+            }
+        }
+
+        async function buscaNomeALuno(idAluno){
+            try {
+                const nomeAluno = await ReadAlunoId(idAluno);
+                if(nomeAluno) return nomeAluno[0].nome;
+                return false;
+
+            }catch(erro){
+                console.error("Erro ao buscar nome do aluno: ", erro);
+            }
+
         }
 
 
@@ -140,7 +181,8 @@ export default function Laudo({navigation, route}){
 
                             data={exame}                       
                             keyExtractor={(item) => item.id}
-                            renderItem={({item}) => <Lista exame={item} nome={nome} />}
+                            renderItem={({item}) => <Lista exame={item} nome={nome}
+                             professor={professor} aluno={aluno} data={data}/>}
                             scrollEnabled={false}
                         
                         />
@@ -151,10 +193,11 @@ export default function Laudo({navigation, route}){
                     <View style={{marginBottom:80}}></View>    
         
                 </ScrollView>  
-                <Text>Valor enviado da outra pagina {id}</Text>  
+               
             </View>
         )
-    }else{
+
+    }else{ //se não vier com id//
         return(
             <View style={styles.container}>
             <Cabecalho local1={()=> navigation.navigate("TabNavigator")}/>
