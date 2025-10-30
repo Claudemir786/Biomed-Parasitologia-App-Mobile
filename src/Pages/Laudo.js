@@ -1,7 +1,7 @@
 import {View, Text, StyleSheet,SafeAreaView, ScrollView, FlatList, SafeAreaViewBase} from 'react-native'
 import Cabecalho from '../Components/Cabecalho/Cabecalho'
 import Botao from '../Components/BotaoPadrao'
-import { Read, ReadpacienteId, ReadAlunoId, ReadProfessorId } from '../Dao/ExameDao'
+import { Read, ReadpacienteId, ReadAlunoId, ReadProfessorId, Delete } from '../Dao/ExameDao'
 import {useState, useEffect} from 'react'
 
 const Lista = ({exame, nome,professor, aluno, data}) =>{
@@ -164,6 +164,24 @@ export default function Laudo({navigation, route}){
 
         }
 
+        async function handleDelete(){
+            try{
+
+                const excluir = await Delete(id);
+                if(excluir){
+                    alert("Exame excluido com sucesso");
+                    navigation.navigate("Inicio");
+                }else{
+                    console.error("erro ao excluir exame");
+                }
+
+            }catch(erro){
+                console.error("erro ao remover Exame: ", erro);
+                alert("Erro ao remover exame");
+            }
+
+        }
+
 
         return(
             <View style={styles.container}>
@@ -187,9 +205,9 @@ export default function Laudo({navigation, route}){
                         
                         />
 
-                    <Botao titulo='EXCLUIR' corBotao='#750202ff' corTexto='#fff'/>
+                    <Botao titulo='EXCLUIR' corBotao='#750202ff' corTexto='#fff' local={()=>handleDelete()}/>
                     <View style={{marginBottom:15}}></View>
-                    <Botao titulo='EDITAR' corBotao='#382c81ff' corTexto='#fff'/>
+                    <Botao titulo='EDITAR' corBotao='#382c81ff' corTexto='#fff' />
                     <View style={{marginBottom:80}}></View>    
         
                 </ScrollView>  
@@ -222,7 +240,6 @@ export default function Laudo({navigation, route}){
     }
    
 }
-
 
 const styles = StyleSheet.create({
     container:{

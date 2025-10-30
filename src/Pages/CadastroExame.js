@@ -9,10 +9,8 @@ import { useState, useEffect } from 'react';
 import {Create, Read, ReadAlunos, ReadPacientes, ReadProfessores} from '../Dao/ExameDao'
 import { Picker } from 'react-native-web'
 
-
-
-
 export default function CadastroExame({ navigation }) {
+ 
   //listas das select
   const [pacientes,setPacientes] = useState([]);
   const [professores, setProfessores] = useState([]);

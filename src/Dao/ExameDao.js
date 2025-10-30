@@ -41,7 +41,27 @@ export async function Update(){
 
 }
 
-export async function Delete(){
+export async function Delete(id){
+  try{
+    console.log("Id do exame: ", id);
+    
+    const res = await fetch(`${BASE_URL}exame/${id}`,{
+      method:"DELETE",
+      headers: AUTH_HEADER
+    });
+
+    //se retornar status de sucesso//
+    if(res.ok){
+      console.log("Exame excluido com sucesso");
+      return true;
+    }
+      return false;
+    
+
+  }catch(erro){
+    console.error("Erro ao fazer a requisição DELETE: ", erro);
+    return false;
+  }
 
 }
 
@@ -53,10 +73,14 @@ export async function Read(id){
       headers: AUTH_HEADER
     });
 
-    console.log("conteudo do response: ", res);
-    const exame = await res.json();
+    if(res.ok){
+      console.log("conteudo do response: ", res);
+      const exame = await res.json();
 
-    return exame;
+      return exame;
+    }
+    return false;
+  
 
  }catch(erro){
   console.error("Erro ao fazer a requisição GETID: ", erro);
@@ -71,7 +95,7 @@ export async function ReadpacienteId(id){
       headers: AUTH_HEADER
     });
      //console.log("conteudo do response paciente id: ", res);
-     if(res){
+     if(res.ok){
        const paciente = await res.json();
        
        return paciente;
@@ -94,7 +118,7 @@ export async function ReadProfessorId(id){
       headers:AUTH_HEADER
     });
 
-    if(res){
+    if(res.ok){
       const professor = await res.json();
       return professor;
     }
@@ -113,7 +137,7 @@ export async function ReadAlunoId(id){
       headers: AUTH_HEADER
   })
 
-  if(res){
+  if(res.ok){
     const aluno = res.json();
     return aluno;
   }
@@ -134,11 +158,13 @@ export async function ReadPacientes(){
     method:"GET",
     headers: AUTH_HEADER  
   });
+
+  if(res.ok){
   //console.log("conteudo do response: ", res);
   const pacientes = await res.json();
 
   return pacientes;
-
+  }
   }catch(erro){
     console.error("Erro ao fazer a requisição GET Pacientes: ", erro);
     return false;
@@ -158,10 +184,12 @@ export async function ReadAlunos(){
       method:"GET",
       headers: AUTH_HEADER 
     });
-
-    //console.log("Conteudo do response: ", res);
-    const alunos = await res.json();
-    return alunos;
+    if(res.ok){
+      //console.log("Conteudo do response: ", res);
+      const alunos = await res.json();
+      return alunos;
+    }
+    return false;
 
   }catch(erro){
     console.error("Erro ao fazer requisição GET pacientes: ", erro);
@@ -177,11 +205,13 @@ export async function ReadProfessores(){
       method:"GET",
       headers: AUTH_HEADER
     });
-
-    //console.log("conteudo retornado do response: ", res);
+    if(res.ok){
+//console.log("conteudo retornado do response: ", res);
     const professores = await res.json();
     return professores;
 
+    }
+    return false;    
 
   }catch(erro){
       console.log("Erro ao fazer requisição GET professores: ", erro);
