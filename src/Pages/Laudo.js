@@ -69,12 +69,17 @@ const Lista = ({exame, nome,professor, aluno, data}) =>{
 
 export default function Laudo({navigation, route}){
     if(route){ //se a pagina for chamada com o envio de id
-        const {id} = route.params;
+        const {id, vaiVoltar} = route.params;        
         const [exame,setExame] = useState([]);
         const [nome, setNome] = useState("");
         const [professor, setProfessor] = useState("");
         const [aluno, setAluno] = useState(""); 
         const [data, setData] = useState(new Date());
+
+        function vaipExame(){
+            vaiVoltar(true, id);
+            navigation.goBack();
+        }
 
         useEffect(() => {
             handleId(); //espera a primeira rodar para encontrar o id paciente
@@ -207,7 +212,7 @@ export default function Laudo({navigation, route}){
 
                     <Botao titulo='EXCLUIR' corBotao='#750202ff' corTexto='#fff' local={()=>handleDelete()}/>
                     <View style={{marginBottom:15}}></View>
-                    <Botao titulo='EDITAR' corBotao='#382c81ff' corTexto='#fff' />
+                    <Botao titulo='EDITAR' corBotao='#382c81ff' corTexto='#fff' local={()=> vaipExame()} />
                     <View style={{marginBottom:80}}></View>    
         
                 </ScrollView>  

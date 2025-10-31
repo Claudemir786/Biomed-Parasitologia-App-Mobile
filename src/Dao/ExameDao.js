@@ -14,7 +14,7 @@ export async function Create(exame){
     exame.professor = parseInt(exame.professor);
     
     //usado para testes
-    let dadosFormulario = JSON.stringify(exame);
+    //let dadosFormulario = JSON.stringify(exame);
     //console.log("Dados que veio do formulario: ", dadosFormulario);
 
     //chamando a requisição
@@ -37,8 +37,30 @@ export async function Create(exame){
     
 }
 
-export async function Update(){
+export async function Update(exame){
+  try{
+  
+   //Faz os campos de id viararem inteiros 
+    exame.paciente = parseInt( exame.paciente)
+    exame.aluno = parseInt(exame.aluno);
+    exame.professor = parseInt(exame.professor);
+    console.log("dados do exame enviados: ", exame);
+    const res = await fetch(`${BASE_URL}exame`,{
+      method: "PUT",
+      headers: AUTH_HEADER,
+      body: JSON.stringify(exame)
+    });
+    if(res.ok){
+      console.log("Deu certo a requisição");
+      const id = await res.json();
+      
+      return true;
+    }
 
+return false
+  }catch(erro){
+    console.error("erro na requisição PUT:, ", erro);
+  }
 }
 
 export async function Delete(id){
@@ -74,7 +96,7 @@ export async function Read(id){
     });
 
     if(res.ok){
-      console.log("conteudo do response: ", res);
+      //console.log("conteudo do response: ", res);
       const exame = await res.json();
 
       return exame;

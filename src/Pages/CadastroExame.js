@@ -6,7 +6,7 @@ import TabNavigator from '../routes/tabs'
 import Abas from '../routes/abas'
 import DateTimePicker from '@react-native-community/datetimepicker'
 import { useState, useEffect } from 'react';
-import {Create, Read, ReadAlunos, ReadPacientes, ReadProfessores} from '../Dao/ExameDao'
+import {Create, Read, ReadAlunos, ReadPacientes, ReadProfessores, Update} from '../Dao/ExameDao'
 import { Picker } from 'react-native-web'
 
 export default function CadastroExame({ navigation }) {
@@ -34,7 +34,18 @@ export default function CadastroExame({ navigation }) {
   const [parasita,setParasita] = useState("");
   const [aluno,setAluno] = useState("");
   const [professor,setProfessor] = useState("");
+  const [editar, setEditar] = useState(false);
+  const [idEaxame, setId] =useState(null);
   
+  //FUNÇÃO CORINGA USADA PARA DETECTAR QUANDO A TELA VOLTAR DO LAUDO
+  function voltarPeditar (verificacao, id){
+    console.log("voltei da tela de laudo");    
+    //console.log("o id continua sendo esse: ", id);
+    if(verificacao){
+      setId(id);
+      setEditar(true);
+    }
+  }
 
   const aoSelecionar = (event, dataSelecionada) => {
     setMostrar(false);
@@ -104,6 +115,34 @@ export default function CadastroExame({ navigation }) {
         console.log("Erro ao trazer os professores para a pagina");
       }
     }
+
+    async function handleUpdate(){
+      try{
+         if(!data || !hora || !dataEntrega || !nomeP || !tecnica || !tipoAmostra || !consistencia || !sangue || !coloracao || !muco || !parasita || !aluno || !professor){
+      console.log("os campos não foram digitados")
+      alert("Preencha todos os campos antes de enviar")
+        
+        }else{
+
+          const resultadoUpdate = await Update({id:idEaxame, paciente:nomeP ,entrada: hora.toTimeString().split(' ')[0], data_exame: data.toISOString().split('T')[0], data_entrega: dataEntrega.toISOString().split('T')[0], 
+                    tipo_amostra: tipoAmostra, tecnica:tecnica, parasita:parasita, consistencia: consistencia, coloracao:coloracao, muco:muco, sangue: sangue, 
+                    aluno:aluno,professor:professor});
+
+           if(resultadoUpdate){
+
+              console.log("Enviando dados para laudo");
+              alert("Edição concluida com sucesso");
+
+              navigation.navigate("Laudo", {id: idEaxame, vaiVoltar: voltarPeditar})
+
+           }   
+
+        }
+
+      }catch(erro){
+        console.error("Erro ao fazero o update:", erro);
+      }
+    }
   
 
   async function handleCreate(){
@@ -113,7 +152,7 @@ export default function CadastroExame({ navigation }) {
       alert("Preencha todos os campos antes de enviar")
 
     }else{
-      console.log("os campos foram digitados corretamente");
+      console.log("os campos foram digitados corretamente");      
       //envia os dados para a função que prepara para enviar para API um detalhe é que os campos tem que estar igual ao da API
       const resultado = await Create({paciente:nomeP ,entrada: hora.toTimeString().split(' ')[0], data_exame: data.toISOString().split('T')[0], data_entrega: dataEntrega.toISOString().split('T')[0], 
                   tipo_amostra: tipoAmostra, tecnica:tecnica, parasita:parasita, consistencia: consistencia, coloracao:coloracao, muco:muco, sangue: sangue, 
@@ -125,9 +164,10 @@ export default function CadastroExame({ navigation }) {
           alert("cadastro Realizado com sucesso");
           //console.log("Dados retornados do banco: ", resultado);
          const idRetornado = resultado.id;
+         setId(idRetornado);
           //console.log(idRetornado);
-          //envia para outra pagina o id do exame criado//
-          navigation.navigate("Laudo", {id: idRetornado});    
+          //envia para outra pagina o id do exame criado e a função de editar que vai voltar depois para ser editada//
+          navigation.navigate("Laudo", {id: idRetornado, vaiVoltar: voltarPeditar});    
       
       }      
     }
@@ -233,12 +273,12 @@ export default function CadastroExame({ navigation }) {
               value={professores.id}              
               />
             ))}
-          </Picker>     
-        
-
-          <Botao corBotao='#382c81ff' corTexto='#fff'
-           local={() => handleCreate()}/>
-           
+          </Picker>  
+    
+          {/*IF TERNARIO PARA SABER SE VAI SER O BOTÃO DE ENVIAR OU O DE CADASTRAR*/ }
+          {editar ? <Botao titulo='ENVIAR' corBotao='#058b05ff' corTexto='#fff' local={()=> handleUpdate()}/>
+           : <Botao corBotao='#382c81ff' corTexto='#fff'local={() => handleCreate()}/> }      
+      
         </View>
 
         <View style={{ marginBottom: 70 }}></View>
