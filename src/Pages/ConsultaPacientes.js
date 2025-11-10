@@ -37,7 +37,7 @@ export default function ConsultaPacientes({ navigation }) {
 
   const buscarPaciente = () => {
     if (!nome) {
-      Alert.alert("Atenção", "Digite o CPF para buscar o paciente!");
+      Alert.alert("Atenção", "Digite o Nome para buscar o paciente!");
       return;
     }
 
@@ -48,7 +48,7 @@ export default function ConsultaPacientes({ navigation }) {
     } else {
       setPaciente(null);
       setExames([]);
-      Alert.alert("Ops!", "Nenhum paciente encontrado com esse CPF.");
+      Alert.alert("Ops!", "Nenhum paciente encontrado com esse Nome.");
     }
   };
 
