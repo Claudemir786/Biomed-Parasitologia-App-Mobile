@@ -12,7 +12,7 @@ import {
 import Cabecalho from "../Components/Cabecalho/Cabecalho";
 
 export default function ConsultaPacientes({ navigation }) {
-  const [cpf, setCpf] = useState("");
+  const [nome, setNome] = useState("");
   const [paciente, setPaciente] = useState(null);
   const [exames, setExames] = useState([]);
 
@@ -36,12 +36,12 @@ export default function ConsultaPacientes({ navigation }) {
   ];
 
   const buscarPaciente = () => {
-    if (!cpf) {
+    if (!nome) {
       Alert.alert("Atenção", "Digite o CPF para buscar o paciente!");
       return;
     }
 
-    const encontrado = pacientesMock.find((p) => p.cpf === cpf);
+    const encontrado = pacientesMock.find((p) => p.nome === nome);
     if (encontrado) {
       setPaciente(encontrado);
       setExames(encontrado.exames);
@@ -65,10 +65,9 @@ export default function ConsultaPacientes({ navigation }) {
           <Text style={styles.subTitle}>Digite o CPF do paciente</Text>
           <TextInput
             style={styles.input}
-            placeholder="Ex: 12345678900"
-            keyboardType="numeric"
-            value={cpf}
-            onChangeText={setCpf}
+            placeholder="Ex: Insira o nome do Paciente"
+            value={nome}
+            onChangeText={setNome}
           />
 
           <TouchableOpacity style={styles.botao} onPress={buscarPaciente}>

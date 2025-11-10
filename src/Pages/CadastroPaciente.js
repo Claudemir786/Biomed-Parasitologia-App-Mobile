@@ -10,19 +10,14 @@ import {
   SafeAreaView,
 } from "react-native";
 import Cabecalho from "../Components/Cabecalho/Cabecalho"; // Cabeçalho
-
+//nome, telefone, pacienteMail, nomeMae, medicamento, nome_medicamento
 export default function CadastroPaciente({ navigation }) {
   const [nome, setNome] = useState("");
-  const [dataNascimento, setDataNascimento] = useState("");
-  const [sexo, setSexo] = useState("");
-  const [cpf, setCpf] = useState("");
   const [telefone, setTelefone] = useState("");
-  const [endereco, setEndereco] = useState("");
-  const [cidade, setCidade] = useState("");
-  const [estado, setEstado] = useState("");
-  const [cep, setCep] = useState("");
   const [email, setEmail] = useState("");
-
+  const [nomeMae, setNomeMae] = useState("");
+  const [medicamento, setMedicamento] = useState("");
+  const [nome_medicamento, setNomeMedicamento] = useState("");
   const handleSalvar = () => {
     if (!nome || !cpf) {
       Alert.alert("Atenção", "Preencha pelo menos o nome e o CPF!");
@@ -31,22 +26,18 @@ export default function CadastroPaciente({ navigation }) {
 
     const novoPaciente = {
       nome,
-      dataNascimento,
-      sexo,
-      cpf,
       telefone,
-      endereco,
-      cidade,
-      estado,
-      cep,
       email,
+      nomeMae,
+      medicamento,
+      nome_medicamento,
     };
 
     console.log("Paciente cadastrado:", novoPaciente);
     Alert.alert("Sucesso", "Paciente cadastrado com sucesso!");
     navigation.goBack();
   };
-
+  
   return (
     <SafeAreaView style={styles.container}>
       <Cabecalho local1={() => navigation.goBack()} />
@@ -63,25 +54,6 @@ export default function CadastroPaciente({ navigation }) {
           />
           <TextInput
             style={styles.input}
-            placeholder="Data de nascimento (DD/MM/AAAA)"
-            value={dataNascimento}
-            onChangeText={setDataNascimento}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Sexo (M/F)"
-            value={sexo}
-            onChangeText={setSexo}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="CPF"
-            keyboardType="numeric"
-            value={cpf}
-            onChangeText={setCpf}
-          />
-          <TextInput
-            style={styles.input}
             placeholder="Telefone"
             keyboardType="phone-pad"
             value={telefone}
@@ -89,35 +61,28 @@ export default function CadastroPaciente({ navigation }) {
           />
           <TextInput
             style={styles.input}
-            placeholder="Endereço"
-            value={endereco}
-            onChangeText={setEndereco}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Cidade"
-            value={cidade}
-            onChangeText={setCidade}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Estado"
-            value={estado}
-            onChangeText={setEstado}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="CEP"
-            keyboardType="numeric"
-            value={cep}
-            onChangeText={setCep}
-          />
-          <TextInput
-            style={styles.input}
             placeholder="E-mail"
             keyboardType="email-address"
             value={email}
             onChangeText={setEmail}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Nome da Mãe"
+            value={nomeMae}
+            onChangeText={setNomeMae}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Medicamento"
+            value={sexo}
+            onChangeText={setMedicamento}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Nome do Medicamento"
+            value={nome}
+            onChangeText={setNomeMedicamento}
           />
 
           <TouchableOpacity style={styles.botao} onPress={handleSalvar}>
