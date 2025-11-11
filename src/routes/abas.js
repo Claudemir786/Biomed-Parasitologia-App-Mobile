@@ -1,5 +1,4 @@
-
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import CadastroExame from '../Pages/CadastroExame';
@@ -12,31 +11,33 @@ import CadastroPaciente from "../Pages/CadastroPaciente";
 import ConsultaPacientes from "../Pages/ConsultaPacientes";
 import TelaCadastro from '../Pages/TelaCadastro';
 import Analytics from '../Pages/Analytics';
-
-
+import Configuracoes from '../Pages/Configuracoes';
 
 export default function Abas() {
-
-    const Stack = createNativeStackNavigator(); //coloca todas as utilidades na const Stack
+  const Stack = createNativeStackNavigator();
+  
   return (   
+    <Stack.Navigator
+      initialRouteName="App"
+      screenOptions={{ headerShown: false }}            
+    > 
+      <Stack.Screen name='App' component={TelaApp}/>
+      <Stack.Screen name='Login' component={TelaLogin}/>
+      <Stack.Screen name='Cadastro' component={TelaCadastro}/>
+      <Stack.Screen name='TabNavigator' component={TabNavigator}/>
+      <Stack.Screen name='Inicio' component={Inicio}/>
+      <Stack.Screen name='CadastroExame' component={CadastroExame}/>
+      <Stack.Screen name='Laudo' component={Laudo}/>
+      <Stack.Screen name='CadastroPaciente' component={CadastroPaciente} /> 
+      <Stack.Screen name="ConsultaPacientes" component={ConsultaPacientes} />
+      <Stack.Screen name="Analytics" component={Analytics} />
+      <Stack.Screen name="Configuracoes" component={Configuracoes} />
+    </Stack.Navigator>
+  );
+}
 
-            <Stack.Navigator //escolhe o tipo de navegação entre as telas
-                initialRouteName="App"
-                screenOptions={{headerShown: false}} //remove a flecha de voltar            
-            > 
-                
-                {/*identifica todas as telas na rota e da seus respectivos nomes */}
-                <Stack.Screen name='TabNavigator' component={TabNavigator}/>
-                <Stack.Screen name='Inicio' component={Inicio}/>
-                <Stack.Screen name='CadastroExame' component={CadastroExame}/>
-                <Stack.Screen name='Laudo' component={Laudo}/>
-                <Stack.Screen name='Login' component={TelaLogin}/>
-                <Stack.Screen name='App' component={TelaApp}/>
-                <Stack.Screen name='CadastroPaciente' component={CadastroPaciente} /> 
-                <Stack.Screen name="ConsultaPacientes" component={ConsultaPacientes} />                
-
-            </Stack.Navigator>
-       );
-      } 
-    
-    
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});
