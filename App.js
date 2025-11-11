@@ -6,9 +6,9 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 export default function App() {
   const fontsLoaded = useCustomFonts();
 
-   if (!fontsLoaded) {
+  if (!fontsLoaded) {
     return null;
-    }
+  }
 
   return (
     <SafeAreaProvider>
