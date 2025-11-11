@@ -21,6 +21,7 @@ export default function CadastroPaciente({ navigation }) {
   const [nomeMae, setNomeMae] = useState("");
   const [medicamento, setMedicamento] = useState("");
   const [nome_medicamento, setNomeMedicamento] = useState("");
+  const [dataNascTexto, setDataNascTexto] = useState("");
 
   // Função para selecionar data
   const aoSelecionarData = (event, dataSelecionada) => {
@@ -77,21 +78,47 @@ export default function CadastroPaciente({ navigation }) {
             onChangeText={setNome}
           />
 
-          {/* INPUT DE DATA DE NASCIMENTO */}
-          <Text style={styles.subTitle}>Data de Nascimento</Text>
-          <TouchableOpacity onPress={() => setMostrarData(true)} style={styles.input}>
-            <Text style={styles.inputText}>
-              {dataNasc.toLocaleDateString('pt-BR')}
-            </Text>
-          </TouchableOpacity>
-          {mostrarData && (
-            <DateTimePicker 
-              value={dataNasc} 
-              mode="date" 
-              display="default" 
-              onChange={aoSelecionarData} 
-            />
-          )}
+          <TextInput
+            style={styles.input}
+            placeholder="Data de Nascimento (DD/MM/AAAA)"
+            value={dataNascTexto}
+            onChangeText={(texto) => {
+              // Remove tudo que não é número
+              let numeros = texto.replace(/\D/g, '');
+              
+              // Formata automaticamente: DD/MM/AAAA
+              if (numeros.length <= 2) {
+                setDataNascTexto(numeros);
+              } else if (numeros.length <= 4) {
+                setDataNascTexto(numeros.slice(0, 2) + '/' + numeros.slice(2));
+              } else if (numeros.length <= 8) {
+                setDataNascTexto(
+                  numeros.slice(0, 2) + '/' + 
+                  numeros.slice(2, 4) + '/' + 
+                  numeros.slice(4, 8)
+                );
+              } else {
+                setDataNascTexto(
+                  numeros.slice(0, 2) + '/' + 
+                  numeros.slice(2, 4) + '/' + 
+                  numeros.slice(4, 8)
+                );
+              }
+
+              // Converte para Date quando estiver completa
+              if (numeros.length === 8) {
+                const dia = parseInt(numeros.slice(0, 2));
+                const mes = parseInt(numeros.slice(2, 4)) - 1;
+                const ano = parseInt(numeros.slice(4, 8));
+                const data = new Date(ano, mes, dia);
+                if (!isNaN(data.getTime())) {
+                  setDataNasc(data);
+                }
+              }
+            }}
+            keyboardType="numeric"
+            maxLength={10}
+          />
 
           <TextInput
             style={styles.input}
