@@ -12,20 +12,6 @@ import Cabecalho from "../Components/Cabecalho/Cabecalho";
 import { CreatePaciente } from "../Dao/PacienteDao";
 import DateTimePicker from '@react-native-community/datetimepicker';
 
-const mysql = require('mysql2');
-
-const pool = mysql.createPool({
-    host: 'localhost',
-    user: 'root',
-    password: '6tb6tb6tb', // ← ADICIONE SUA SENHA
-    database: 'clinicode',
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0
-});
-
-module.exports = pool;
-
 export default function CadastroPaciente({ navigation }) {
   const [nome, setNome] = useState("");
   const [dataNasc, setDataNasc] = useState(new Date());
@@ -90,6 +76,9 @@ export default function CadastroPaciente({ navigation }) {
             value={nome}
             onChangeText={setNome}
           />
+
+          {/* INPUT DE DATA DE NASCIMENTO */}
+          <Text style={styles.subTitle}>Data de Nascimento</Text>
           <TouchableOpacity onPress={() => setMostrarData(true)} style={styles.input}>
             <Text style={styles.inputText}>
               {dataNasc.toLocaleDateString('pt-BR')}
