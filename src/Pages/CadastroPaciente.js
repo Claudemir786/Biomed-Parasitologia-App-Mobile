@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { SafeAreaView } from 'react-native-safe-area-context';
+
 import {
   View,
   Text,
@@ -9,8 +11,9 @@ import {
   Alert,
   SafeAreaView,
 } from "react-native";
-import Cabecalho from "../Components/Cabecalho/Cabecalho"; // Cabeçalho
-//nome, telefone, pacienteMail, nomeMae, medicamento, nome_medicamento
+import Cabecalho from "../Components/Cabecalho/Cabecalho";
+import { CreatePaciente } from "../Dao/PacienteDao"; // IMPORT ADICIONADO
+
 export default function CadastroPaciente({ navigation }) {
   const [nome, setNome] = useState("");
   const [telefone, setTelefone] = useState("");
@@ -18,9 +21,11 @@ export default function CadastroPaciente({ navigation }) {
   const [nomeMae, setNomeMae] = useState("");
   const [medicamento, setMedicamento] = useState("");
   const [nome_medicamento, setNomeMedicamento] = useState("");
-  const handleSalvar = () => {
-    if (!nome || !cpf) {
-      Alert.alert("Atenção", "Preencha pelo menos o nome e o CPF!");
+
+  const handleSalvar = async () => {
+    // CORREÇÃO: Removido 'cpf' que não existe
+    if (!nome) {
+      Alert.alert("Atenção", "Preencha pelo menos o nome!");
       return;
     }
 
@@ -33,11 +38,23 @@ export default function CadastroPaciente({ navigation }) {
       nome_medicamento,
     };
 
-    console.log("Paciente cadastrado:", novoPaciente);
-    Alert.alert("Sucesso", "Paciente cadastrado com sucesso!");
-    navigation.goBack();
+    try {
+      const resultado = await CreatePaciente(novoPaciente);
+      
+      if (resultado) {
+        console.log("Paciente cadastrado:", resultado);
+        Alert.alert("Sucesso", "Paciente cadastrado com sucesso!");
+        navigation.goBack();
+      } else {
+        Alert.alert("Erro", "Não foi possível cadastrar o paciente");
+      }
+      
+    } catch (erro) {
+      console.error("Erro ao cadastrar paciente:", erro);
+      Alert.alert("Erro", "Erro ao cadastrar paciente");
+    }
   };
-  
+
   return (
     <SafeAreaView style={styles.container}>
       <Cabecalho local1={() => navigation.goBack()} />
@@ -72,16 +89,20 @@ export default function CadastroPaciente({ navigation }) {
             value={nomeMae}
             onChangeText={setNomeMae}
           />
+          
+          {/* CORREÇÃO: medicamento em vez de sexo */}
           <TextInput
             style={styles.input}
             placeholder="Medicamento"
-            value={sexo}
+            value={medicamento}
             onChangeText={setMedicamento}
           />
+          
+          {/* CORREÇÃO: nome_medicamento em vez de nome */}
           <TextInput
             style={styles.input}
             placeholder="Nome do Medicamento"
-            value={nome}
+            value={nome_medicamento}
             onChangeText={setNomeMedicamento}
           />
 
@@ -99,14 +120,14 @@ export default function CadastroPaciente({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f2f7fb", // mesmo fundo da tela de consulta
+    backgroundColor: "#f2f7fb",
   },
   body: {
     flex: 1,
     width: "100%",
   },
   box: {
-    backgroundColor: "#fff", // box branco
+    backgroundColor: "#fff",
     borderRadius: 20,
     paddingVertical: 40,
     paddingHorizontal: 25,
@@ -123,7 +144,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: "700",
-    color: "#382c81ff", // roxo escuro
+    color: "#382c81ff",
     textAlign: "center",
     marginBottom: 20,
   },
@@ -137,7 +158,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   botao: {
-    backgroundColor: "#382c81ff", // roxo escuro
+    backgroundColor: "#382c81ff",
     padding: 15,
     borderRadius: 8,
     alignItems: "center",
