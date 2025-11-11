@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -8,49 +8,120 @@ import {
   ScrollView,
   SafeAreaView,
   Alert,
+  FlatList
 } from "react-native";
 import Cabecalho from "../Components/Cabecalho/Cabecalho";
+import { SearchPacientePorNome, DeletePaciente } from "../Dao/PacienteDao";
+import { FontAwesome } from "@expo/vector-icons";
 
 export default function ConsultaPacientes({ navigation }) {
   const [nome, setNome] = useState("");
-  const [paciente, setPaciente] = useState(null);
-  const [exames, setExames] = useState([]);
+  const [pacientes, setPacientes] = useState([]);
+  const [carregando, setCarregando] = useState(false);
 
-  // Exemplo de dados simulados
-  const pacientesMock = [
-    {
-      nome: "João da Silva",
-      cpf: "12345678900",
-      exames: [
-        { tipo: "Exame de Fezes", status: "Em processo" },
-        { tipo: "Hemograma", status: "Concluído" },
-      ],
-    },
-    {
-      nome: "Maria Oliveira",
-      cpf: "98765432100",
-      exames: [
-        { tipo: "Exame de Sangue", status: "Concluído" },
-      ],
-    },
-  ];
+  // Busca automática quando o usuário digita
+  useEffect(() => {
+    const buscarPacientes = async () => {
+      if (nome.length >= 2) {
+        setCarregando(true);
+        try {
+          console.log("Buscando pacientes com:", nome);
+          const resultados = await SearchPacientePorNome(nome);
+          console.log("Resultados recebidos:", resultados);
+          setPacientes(resultados);
+        } catch (erro) {
+          console.error("Erro na busca:", erro);
+          Alert.alert("Erro", "Não foi possível buscar os pacientes");
+        } finally {
+          setCarregando(false);
+        }
+      } else {
+        setPacientes([]);
+      }
+    };
 
-  const buscarPaciente = () => {
-    if (!nome) {
-      Alert.alert("Atenção", "Digite o Nome para buscar o paciente!");
-      return;
-    }
+    const timeoutId = setTimeout(buscarPacientes, 500);
+    return () => clearTimeout(timeoutId);
+  }, [nome]);
 
-    const encontrado = pacientesMock.find((p) => p.nome === nome);
-    if (encontrado) {
-      setPaciente(encontrado);
-      setExames(encontrado.exames);
-    } else {
-      setPaciente(null);
-      setExames([]);
-      Alert.alert("Ops!", "Nenhum paciente encontrado com esse Nome.");
-    }
+  const limparBusca = () => {
+    setNome("");
+    setPacientes([]);
   };
+
+  const handleEditarPaciente = (paciente) => {
+    Alert.alert("Editar", `Editar ${paciente.nome}?`);
+  };
+
+  const handleExcluirPaciente = (paciente) => {
+    Alert.alert(
+      "Excluir",
+      `Excluir ${paciente.nome}?`,
+      [
+        { text: "Cancelar", style: "cancel" },
+        { 
+          text: "Excluir", 
+          style: "destructive",
+          onPress: async () => {
+            try {
+              const resultado = await DeletePaciente(paciente.id);
+              if (resultado) {
+                Alert.alert("Sucesso", "Paciente excluído!");
+                setPacientes(pacientes.filter(p => p.id !== paciente.id));
+              }
+            } catch (erro) {
+              Alert.alert("Erro", "Erro ao excluir");
+            }
+          }
+        }
+      ]
+    );
+  };
+
+  // Cabeçalho da tabela
+  const renderCabecalhoTabela = () => (
+    <View style={styles.linhaTabelaCabecalho}>
+      <Text style={[styles.coluna, styles.colunaNome, styles.textoCabecalho]}>Nome</Text>
+      <Text style={[styles.coluna, styles.colunaData, styles.textoCabecalho]}>Nascimento</Text>
+      <Text style={[styles.coluna, styles.colunaTelefone, styles.textoCabecalho]}>Telefone</Text>
+      <Text style={[styles.coluna, styles.colunaAcoes, styles.textoCabecalho]}>Ações</Text>
+    </View>
+  );
+
+  // Item da tabela
+  const renderItemTabela = ({ item }) => (
+    <View style={styles.linhaTabela}>
+      <Text style={[styles.coluna, styles.colunaNome, styles.textoDados]} numberOfLines={1}>
+        {item.nome}
+      </Text>
+      
+      <Text style={[styles.coluna, styles.colunaData, styles.textoDados]}>
+        {item.dataNasc ? new Date(item.dataNasc).toLocaleDateString('pt-BR') : "N/I"}
+      </Text>
+      
+      <Text style={[styles.coluna, styles.colunaTelefone, styles.textoDados]}>
+        {item.telefone || "N/I"}
+      </Text>
+      
+      <View style={[styles.coluna, styles.colunaAcoes]}>
+        <View style={styles.containerBotoes}>
+          <TouchableOpacity 
+            style={[styles.botaoAcao, styles.botaoEditar]}
+            onPress={() => handleEditarPaciente(item)}
+          >
+            <FontAwesome name="edit" size={16} color="#fff" />
+          </TouchableOpacity>
+          
+          <TouchableOpacity 
+            style={[styles.botaoAcao, styles.botaoExcluir]}
+            onPress={() => handleExcluirPaciente(item)}
+          >
+            <FontAwesome name="trash" size={16} color="#fff" />
+          </TouchableOpacity>
+        </View>
+      </View>
+    </View>
+  );
 
   return (
     <SafeAreaView style={styles.container}>
@@ -60,51 +131,53 @@ export default function ConsultaPacientes({ navigation }) {
         <View style={{ marginBottom: 50 }}></View>
 
         <View style={styles.box}>
-          <Text style={styles.title}>Consulta de Paciente</Text>
+          <Text style={styles.title}>Consulta de Pacientes</Text>
 
-          <Text style={styles.subTitle}>Digite o CPF do paciente</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Ex: Insira o nome do Paciente"
-            value={nome}
-            onChangeText={setNome}
-          />
+          <Text style={styles.subTitle}>Digite o nome do paciente</Text>
+          
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.input}
+              placeholder="Digite o nome do paciente..."
+              value={nome}
+              onChangeText={setNome}
+            />
+            {nome.length > 0 && (
+              <TouchableOpacity onPress={limparBusca} style={styles.limparBtn}>
+                <Text style={styles.limparText}>X</Text>
+              </TouchableOpacity>
+            )}
+          </View>
 
-          <TouchableOpacity style={styles.botao} onPress={buscarPaciente}>
-            <Text style={styles.textoBotao}>Buscar</Text>
-          </TouchableOpacity>
+          {carregando && <Text style={styles.carregando}>Buscando...</Text>}
 
-          {paciente && (
-            <View style={styles.resultado}>
-              <Text style={styles.nomePaciente}>{paciente.nome}</Text>
-              <Text style={styles.cpfPaciente}>CPF: {paciente.cpf}</Text>
-
-              <Text style={styles.tituloExames}>Exames</Text>
-              {exames.map((exame, index) => (
-                <View key={index} style={styles.cardExame}>
-                  <Text style={styles.tipoExame}>{exame.tipo}</Text>
-                  <Text
-                    style={[
-                      styles.statusExame,
-                      exame.status === "Concluído"
-                        ? { color: "green" }
-                        : { color: "orange" },
-                    ]}
-                  >
-                    {exame.status}
-                  </Text>
-                </View>
-              ))}
+          {pacientes.length > 0 && (
+            <View style={styles.tabelaContainer}>
+              <Text style={styles.resultadosTitle}>
+                {pacientes.length} paciente(s) encontrado(s)
+              </Text>
+              
+              {renderCabecalhoTabela()}
+              
+              <FlatList
+                data={pacientes}
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={renderItemTabela}
+                scrollEnabled={false}
+              />
             </View>
           )}
-        </View>
 
-        <View style={{ marginBottom: 70 }}></View>
+          {nome.length >= 2 && pacientes.length === 0 && !carregando && (
+            <Text style={styles.semResultados}>Nenhum paciente com "{nome}"</Text>
+          )}
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
 }
 
+// Styles (mantenha os mesmos do código anterior)
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -142,6 +215,10 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 10,
   },
+  inputContainer: {
+    position: 'relative',
+    marginBottom: 15,
+  },
   input: {
     borderColor: "#ddd",
     borderWidth: 1,
@@ -149,58 +226,93 @@ const styles = StyleSheet.create({
     backgroundColor: "#f9f9f9",
     padding: 15,
     width: "100%",
-    marginBottom: 20,
-  },
-  botao: {
-    backgroundColor: "#382c81ff",
-    padding: 15,
-    borderRadius: 8,
-    alignItems: "center",
-    marginBottom: 20,
-  },
-  textoBotao: {
-    color: "#fff",
-    fontWeight: "bold",
-    fontSize: 18,
-  },
-  resultado: {
-    marginTop: 20,
-    borderTopWidth: 1,
-    borderTopColor: "#ddd",
-    paddingTop: 15,
-  },
-  nomePaciente: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "#382c81ff",
-    textAlign: "center",
-  },
-  cpfPaciente: {
     fontSize: 16,
-    textAlign: "center",
-    marginBottom: 15,
   },
-  tituloExames: {
-    fontSize: 18,
-    fontWeight: "bold",
+  carregando: {
+    textAlign: 'center',
+    color: '#666',
+    fontStyle: 'italic',
     marginBottom: 10,
-    color: "#333",
   },
-  cardExame: {
-    backgroundColor: "#f9f9f9",
+  tabelaContainer: {
+    backgroundColor: '#f8f9fa',
     borderRadius: 10,
     padding: 15,
-    marginBottom: 10,
-    borderWidth: 1,
-    borderColor: "#eee",
+    marginBottom: 15,
   },
-  tipoExame: {
-    fontSize: 16,
-    fontWeight: "500",
-    color: "#000",
-  },
-  statusExame: {
+  resultadosTitle: {
     fontSize: 14,
-    marginTop: 5,
+    fontWeight: '600',
+    color: '#382c81ff',
+    marginBottom: 15,
+    textAlign: 'center',
+  },
+  linhaTabelaCabecalho: {
+    flexDirection: 'row',
+    backgroundColor: '#382c81ff',
+    paddingVertical: 12,
+    paddingHorizontal: 8,
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
+    marginBottom: 2,
+  },
+  linhaTabela: {
+    flexDirection: 'row',
+    backgroundColor: '#fff',
+    paddingVertical: 12,
+    paddingHorizontal: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
+    alignItems: 'center',
+  },
+  coluna: {
+    paddingHorizontal: 4,
+  },
+  colunaNome: {
+    flex: 3,
+  },
+  colunaData: {
+    flex: 2,
+  },
+  colunaTelefone: {
+    flex: 2,
+  },
+  colunaAcoes: {
+    flex: 1.5,
+  },
+  textoCabecalho: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 12,
+    textAlign: 'center',
+  },
+  textoDados: {
+    color: '#333',
+    fontSize: 12,
+    textAlign: 'center',
+  },
+  containerBotoes: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+  },
+  botaoAcao: {
+    padding: 6,
+    borderRadius: 4,
+    justifyContent: 'center',
+    alignItems: 'center',
+    minWidth: 28,
+  },
+  botaoEditar: {
+    backgroundColor: '#ffa500',
+  },
+  botaoExcluir: {
+    backgroundColor: '#ff4444',
+  },
+  semResultados: {
+    textAlign: 'center',
+    color: '#666',
+    fontStyle: 'italic',
+    marginTop: 10,
   },
 });
