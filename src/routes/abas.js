@@ -1,6 +1,3 @@
-
-import { StyleSheet, Text, View } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import CadastroExame from '../Pages/CadastroExame';
 import Inicio from '../Pages/TelaPrincipal';
@@ -28,7 +25,9 @@ export default function Abas() {
                 {/*identifica todas as telas na rota e da seus respectivos nomes */}
                 <Stack.Screen name='TabNavigator' component={TabNavigator}/>
                 <Stack.Screen name='Inicio' component={Inicio}/>
+                <Stack.Screen name='Cadastro' component={TelaCadastro}/>
                 <Stack.Screen name='CadastroExame' component={CadastroExame}/>
+                <Stack.Screen name='Analytics' component={Analytics}/>
                 <Stack.Screen name='Laudo' component={Laudo}/>
                 <Stack.Screen name='Login' component={TelaLogin}/>
                 <Stack.Screen name='App' component={TelaApp}/>
