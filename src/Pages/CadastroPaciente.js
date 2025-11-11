@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import { SafeAreaView } from 'react-native-safe-area-context';
-
 import {
   View,
   Text,
@@ -9,21 +7,30 @@ import {
   ScrollView,
   StyleSheet,
   Alert,
-  SafeAreaView,
 } from "react-native";
 import Cabecalho from "../Components/Cabecalho/Cabecalho";
-import { CreatePaciente } from "../Dao/PacienteDao"; // IMPORT ADICIONADO
+import { CreatePaciente } from "../Dao/PacienteDao";
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 export default function CadastroPaciente({ navigation }) {
   const [nome, setNome] = useState("");
+  const [dataNasc, setDataNasc] = useState(new Date());
+  const [mostrarData, setMostrarData] = useState(false);
   const [telefone, setTelefone] = useState("");
   const [email, setEmail] = useState("");
   const [nomeMae, setNomeMae] = useState("");
   const [medicamento, setMedicamento] = useState("");
   const [nome_medicamento, setNomeMedicamento] = useState("");
 
+  // Função para selecionar data
+  const aoSelecionarData = (event, dataSelecionada) => {
+    setMostrarData(false);
+    if (dataSelecionada) {
+      setDataNasc(dataSelecionada);
+    }
+  };
+
   const handleSalvar = async () => {
-    // CORREÇÃO: Removido 'cpf' que não existe
     if (!nome) {
       Alert.alert("Atenção", "Preencha pelo menos o nome!");
       return;
@@ -31,6 +38,7 @@ export default function CadastroPaciente({ navigation }) {
 
     const novoPaciente = {
       nome,
+      dataNasc: dataNasc.toISOString().split('T')[0], // Formato YYYY-MM-DD
       telefone,
       email,
       nomeMae,
@@ -48,7 +56,6 @@ export default function CadastroPaciente({ navigation }) {
       } else {
         Alert.alert("Erro", "Não foi possível cadastrar o paciente");
       }
-      
     } catch (erro) {
       console.error("Erro ao cadastrar paciente:", erro);
       Alert.alert("Erro", "Erro ao cadastrar paciente");
@@ -56,7 +63,7 @@ export default function CadastroPaciente({ navigation }) {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <Cabecalho local1={() => navigation.goBack()} />
 
       <ScrollView style={styles.body} showsVerticalScrollIndicator={false}>
@@ -69,6 +76,23 @@ export default function CadastroPaciente({ navigation }) {
             value={nome}
             onChangeText={setNome}
           />
+
+          {/* INPUT DE DATA DE NASCIMENTO */}
+          <Text style={styles.subTitle}>Data de Nascimento</Text>
+          <TouchableOpacity onPress={() => setMostrarData(true)} style={styles.input}>
+            <Text style={styles.inputText}>
+              {dataNasc.toLocaleDateString('pt-BR')}
+            </Text>
+          </TouchableOpacity>
+          {mostrarData && (
+            <DateTimePicker 
+              value={dataNasc} 
+              mode="date" 
+              display="default" 
+              onChange={aoSelecionarData} 
+            />
+          )}
+
           <TextInput
             style={styles.input}
             placeholder="Telefone"
@@ -89,16 +113,12 @@ export default function CadastroPaciente({ navigation }) {
             value={nomeMae}
             onChangeText={setNomeMae}
           />
-          
-          {/* CORREÇÃO: medicamento em vez de sexo */}
           <TextInput
             style={styles.input}
             placeholder="Medicamento"
             value={medicamento}
             onChangeText={setMedicamento}
           />
-          
-          {/* CORREÇÃO: nome_medicamento em vez de nome */}
           <TextInput
             style={styles.input}
             placeholder="Nome do Medicamento"
@@ -113,7 +133,7 @@ export default function CadastroPaciente({ navigation }) {
 
         <View style={{ marginBottom: 70 }}></View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -148,6 +168,12 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 20,
   },
+  subTitle: {
+    fontSize: 16,
+    color: "#333",
+    textAlign: "center",
+    marginBottom: 10,
+  },
   input: {
     borderColor: "#ddd",
     borderWidth: 1,
@@ -156,6 +182,10 @@ const styles = StyleSheet.create({
     padding: 15,
     width: "100%",
     marginBottom: 15,
+  },
+  inputText: {
+    fontSize: 16,
+    color: "#333",
   },
   botao: {
     backgroundColor: "#382c81ff",

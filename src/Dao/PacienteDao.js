@@ -6,15 +6,26 @@ const AUTH_HEADER = {
   "Authorization": `Bearer ${TOKEN}`
 }
 
-//Cadastrar novo paciente
+// CREATE - Cadastrar novo paciente
 export async function CreatePaciente(paciente) {
   try {
-    console.log("Dados do paciente enviados: ", paciente);
+    // COM dataNasc
+    const dadosParaBackend = {
+      nome: paciente.nome,
+      dataNasc: paciente.dataNasc, // ← ADICIONADO
+      telefone: paciente.telefone,
+      pacienteMail: paciente.email,
+      nomeMae: paciente.nomeMae,
+      medicamento: paciente.medicamento,
+      nome_medicamento: paciente.nome_medicamento
+    };
+    
+    console.log("Dados enviados para backend: ", dadosParaBackend);
     
     const res = await fetch(`${BASE_URL}pacientes`, {
       method: "POST",
       headers: AUTH_HEADER,
-      body: JSON.stringify(paciente)
+      body: JSON.stringify(dadosParaBackend)
     });
 
     if (res.ok) {
@@ -32,7 +43,7 @@ export async function CreatePaciente(paciente) {
   }
 }
 
-//Buscar paciente por ID
+// READ - Buscar paciente por ID
 export async function ReadPaciente(id) {
   try {
     const res = await fetch(`${BASE_URL}pacientes/${id}`, {
@@ -52,7 +63,7 @@ export async function ReadPaciente(id) {
   }
 }
 
-//Buscar todos os pacientes
+// READ ALL - Buscar todos os pacientes
 export async function ReadPacientes() {
   try {
     const res = await fetch(`${BASE_URL}pacientes`, {
@@ -72,12 +83,12 @@ export async function ReadPacientes() {
   }
 }
 
-//Atualizar paciente
+// UPDATE - Atualizar paciente
 export async function UpdatePaciente(paciente) {
   try {
     console.log("Dados do paciente para atualizar: ", paciente);
     
-    const res = await fetch(`${BASE_URL}pacientes`, {
+    const res = await fetch(`${BASE_URL}pacientes/${paciente.id}`, {
       method: "PUT",
       headers: AUTH_HEADER,
       body: JSON.stringify(paciente)
@@ -95,7 +106,7 @@ export async function UpdatePaciente(paciente) {
   }
 }
 
-//Excluir paciente
+// DELETE - Excluir paciente
 export async function DeletePaciente(id) {
   try {
     const res = await fetch(`${BASE_URL}pacientes/${id}`, {
@@ -115,7 +126,7 @@ export async function DeletePaciente(id) {
   }
 }
 
-//Para a tela de consulta
+// BUSCAR POR NOME - Para a tela de consulta
 export async function SearchPacientePorNome(nome) {
   try {
     const res = await fetch(`${BASE_URL}pacientes/search?nome=${encodeURIComponent(nome)}`, {
