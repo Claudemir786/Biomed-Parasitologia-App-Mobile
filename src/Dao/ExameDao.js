@@ -1,5 +1,5 @@
 const TOKEN = "eGv&>V£s}zV_q]#TSx[B520WGP|!~VOpe@~Y8ex)GTok,~867E"; //TOKEN que serve como chave na hora de enviar para API(tem que ter o token la na API também)
-const BASE_URL = "http://192.168.3.24:3000/"; //URL com ip maquina Claudemir
+const BASE_URL = "http://localhost:3000/"; //URL com ip maquina Claudemir
 
 const AUTH_HEADER = {
   "Content-Type": "application/json",
@@ -214,7 +214,7 @@ export async function ReadAlunos(){
     return false;
 
   }catch(erro){
-    console.error("Erro ao fazer requisição GET pacientes: ", erro);
+    console.error("Erro ao fazer requisição GET alunos: ", erro);
     return false;
   }
 }

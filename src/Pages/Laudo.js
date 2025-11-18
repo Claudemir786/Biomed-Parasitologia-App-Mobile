@@ -9,7 +9,7 @@ const Lista = ({exame, nome,professor, aluno, data}) =>{
     return(
         <View style={{marginBottom:50}}>
             <View style={styles.linha}>
-                <Text style={styles.subtitulo}>Paciente ID: </Text>
+                <Text style={styles.subtitulo}>Exame ID: </Text>
                 <Text style={styles.dadosReturm}>{exame?.id}</Text>
             </View>
             <View style={styles.linha}>
